@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: #ffe461;
+}
+
+header > div {
+    width: 70rem;
+    height: 5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#project-name {
+    font-weight: bold;
+}
+
+.nav-sign {
+    color: #000000;
+    font-size: 2rem;
+    text-decoration: none;
+    font-family: sans-serif;
+    margin-left: 2rem;
+}
+
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: #b6b6b6;
+}
+
+footer > h4 {
+    width: 60rem;
+    text-align: center;
+}
+
+#common-field {
+    width: 60rem;
+    margin: 0 auto;
+}

@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
+
 urlpatterns = [
-    path("events/", views.EventsAPIView.as_view(), name="hello"),
+    path("common-events/", views.EventsAPIView.as_view(), name="common-events"),
+    path("new-event/", views.NewEventViewSet.as_view({"post": "create"}), name="new-event"),
 ]

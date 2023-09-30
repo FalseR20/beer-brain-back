@@ -3,16 +3,23 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
-from . import models
+from . import models, serializers
 
 
 class EventsAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request: Request):
-        members: QuerySet[models.Member] = models.Member.objects.filter(user=request.user)
+        members: QuerySet[models.Member] = models.Member.objects.filter(
+            user__auth_user=request.user
+        )
         events = [member.event for member in members]
+        serializer = serializers.CommonEventSerializer(events, many=True)
+        return Response(serializer.data)
 
-        content = {"message": "Hello, World!"}
-        return Response(content)
+
+class NewEventViewSet(ModelViewSet):
+    queryset = models.Event
+    serializer_class = serializers.CreateEventSerializer

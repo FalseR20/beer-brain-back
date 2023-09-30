@@ -3,28 +3,28 @@ from django.db import models
 
 
 class User(models.Model):
-    auth_user = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    auth_user = models.ForeignKey(AuthUser, on_delete=models.CASCADE, null=False)
 
 
 class Event(models.Model):
-    date = models.DateField(auto_now=True)
-    description = models.CharField(max_length=256)
-    is_closed = models.BooleanField()
+    date = models.DateField(auto_now_add=True, null=False)
+    description = models.CharField(max_length=256, null=False)
+    is_closed = models.BooleanField(null=False, default=False)
 
 
 class Member(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=False)
 
 
 class Deposit(models.Model):
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    value = models.DecimalField(max_digits=12, decimal_places=2)
-    description = models.CharField(max_length=256)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
+    value = models.DecimalField(max_digits=12, decimal_places=2, null=False)
+    description = models.CharField(max_length=256, null=False)
 
 
 class Repayment(models.Model):
-    payer = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="payer_member_id")
-    recipient = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="recipient_member_id")
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    value = models.DecimalField(max_digits=12, decimal_places=2)
+    payer = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="payer_member_id", null=False)
+    recipient = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="recipient_member_id", null=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=False)
+    value = models.DecimalField(max_digits=12, decimal_places=2, null=False)

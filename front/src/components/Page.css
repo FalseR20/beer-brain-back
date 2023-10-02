@@ -46,3 +46,7 @@ footer > h4 {
     width: 60rem;
     margin: 0 auto;
 }
+
+a:hover {
+    cursor: pointer;
+}

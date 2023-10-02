@@ -1,4 +1,4 @@
-import Page from "../components/Page.tsx";
+import Page from "./Page.tsx";
 import "./Home.css"
 
 function Home() {

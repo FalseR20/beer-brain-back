@@ -24,3 +24,11 @@ export async function signUp(username: string, email: string, firstname: string,
         await signIn(username, password);
     }
 }
+
+export function signOut(): void{
+    localStorage.removeItem("token");
+}
+
+export function isAuthorized(): boolean {
+    return "token" in localStorage;
+}

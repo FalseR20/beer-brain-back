@@ -1,51 +1,75 @@
 import Page from "./Page.tsx";
 import "./Home.css"
+import {ReactNode, useEffect, useState} from "react";
 
-function Home() {
+export default function Home() {
     return (
         <Page isAuthRequired={true}>
-            <p>Active debts</p>
-            <Debts/>
-            <p>Closed debts</p>
+            <div id={"debts-div"}>
+                <p>Active debts</p>
+                <Debts/>
+                <p>Closed debts</p>
+            </div>
+
         </Page>
 
     )
 }
 
-function Debts() {
+interface DebtJSON {
+    id: number,
+    members_count: number,
+    date: string,
+    description: string,
+    is_closed: boolean
+}
+
+function Debts(): ReactNode {
+    const [debts, setDebts] = useState<DebtJSON[]>([]);
+
+    useEffect(
+        () => {
+            fetch("http://127.0.0.1:8000/core/common-events/", {
+                headers: {
+                    "Authorization": "Token 8ec432c76c8ac809f9315ba63964980f51136347"
+                }
+            }).then(response => response.json())
+                .then(data => setDebts(data));
+        }, []
+    )
+
     return (
         <>
-            <div id={"debts-div"}>
-                <Debt/>
-            </div>
+            {debts.map(
+                (debt => Debt(debt))
+            )}
         </>
+
     )
 }
 
 
-function Debt() {
+function Debt(debtJSON: DebtJSON) {
+    console.log(debtJSON);
     return (
-        <div className={"debt-div"}>
+        <div key={`Debt${debtJSON.id}`} className={"debt-div"}>
             <div className={"debt-top"}>
                 <div className={"debt-description"}>
-                    <p>Зачилка в бане</p>
+                    <p>{debtJSON.description}</p>
                 </div>
                 <div className={"debt-value"}>
-                    <p>+60.41</p>
+                    <p>{debtJSON.is_closed.toString()}</p>
                 </div>
             </div>
             <div className={"debt-bottom"}>
                 <div className={"debt-date"}>
-                    <p>сб, 16.09</p>
+                    <p>{debtJSON.date}</p>
                 </div>
                 <div className={"debt-status"}>
-                    <p>Вернули 3 из 5</p>
+                    <p>{debtJSON.members_count} members</p>
                 </div>
             </div>
 
         </div>
     )
 }
-
-
-export default Home

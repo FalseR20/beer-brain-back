@@ -2,10 +2,12 @@ import {ReactNode} from "react";
 import "./Page.css"
 import {Link} from "react-router-dom";
 import {isAuthorized, signOut} from "../auth/authentication.ts";
+import Guest from "./Guest.tsx";
 
 
 interface PageProps {
     children: ReactNode;
+    isAuthRequired?: boolean;
 }
 
 function out() {
@@ -30,7 +32,8 @@ function Links() {
 
 }
 
-export default function Page({children}: PageProps) {
+export default function Page(props: PageProps) {
+    const inner: ReactNode = (props.isAuthRequired == true && !isAuthorized()) ? Guest() : props.children;
     return (
         <div>
             <header>
@@ -42,9 +45,8 @@ export default function Page({children}: PageProps) {
                 </div>
             </header>
             <div id={"common-field"}>
-                {children}
+                {inner}
             </div>
         </div>
     )
-        ;
 }

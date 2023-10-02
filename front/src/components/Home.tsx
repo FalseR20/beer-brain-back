@@ -3,7 +3,7 @@ import "./Home.css"
 
 function Home() {
     return (
-        <Page>
+        <Page isAuthRequired={true}>
             <p>Active debts</p>
             <Debts/>
             <p>Closed debts</p>

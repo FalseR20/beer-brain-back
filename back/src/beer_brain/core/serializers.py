@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.request import Request
 
 from . import models
 
@@ -15,6 +16,27 @@ class CommonEventSerializer(serializers.ModelSerializer):
 
 
 class CreateEventSerializer(serializers.ModelSerializer):
+    initiator = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = models.Event
-        fields = ["description"]
+        fields = ["id", "date", "description", "is_closed", "initiator"]
+        extra_kwargs = {
+            "id": {"read_only": True},
+            "date": {"read_only": True},
+            "is_closed": {"read_only": True},
+        }
+
+    def get_initiator(self, event: models.Event) -> models.Member:
+        request: Request = self.context["request"]
+        user = models.User.objects.get(auth_user=request.user)
+        member = models.Member()
+        member.event = event
+        member.user = user
+        member.save()
+        return member
+
+
+# class MemberSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = 

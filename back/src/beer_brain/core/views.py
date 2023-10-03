@@ -20,6 +20,7 @@ class EventsAPIView(APIView):
         return Response(serializer.data)
 
 
-class NewEventViewSet(ModelViewSet):
+class CreateEventViewSet(ModelViewSet):
+    permission_classes = (IsAuthenticated, )
     queryset = models.Event
     serializer_class = serializers.CreateEventSerializer

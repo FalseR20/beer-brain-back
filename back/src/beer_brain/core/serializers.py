@@ -15,6 +15,12 @@ class CommonEventSerializer(serializers.ModelSerializer):
         return models.Member.objects.filter(event=event).count()
 
 
+class MemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Member
+        fields = "__all__"
+
+
 class CreateEventSerializer(serializers.ModelSerializer):
     initiator = serializers.SerializerMethodField(read_only=True)
 
@@ -27,16 +33,11 @@ class CreateEventSerializer(serializers.ModelSerializer):
             "is_closed": {"read_only": True},
         }
 
-    def get_initiator(self, event: models.Event) -> models.Member:
+    def get_initiator(self, event: models.Event):
         request: Request = self.context["request"]
         user = models.User.objects.get(auth_user=request.user)
         member = models.Member()
         member.event = event
         member.user = user
         member.save()
-        return member
-
-
-# class MemberSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = 
+        return MemberSerializer(member).data

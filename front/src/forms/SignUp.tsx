@@ -37,12 +37,6 @@ export default function SignUp() {
                 <h1> Sign Up</h1>
                 <form onSubmit={handleSubmit(onSubmit)} method={"POST"}>
                     <label>
-                        Login
-                        <input type={"text"}
-                               className={"form-field"} {...register("login", {required: "This field is required", minLength: {value: 3, message: "Min length of login is 3"}})}/>
-                        <span>{errors.login?.message}</span>
-                    </label>
-                    <label>
                         Email
                         <input type={"email"}
                                className={"form-field"} {...register("email", {required: "This field is required"})}/>
@@ -51,18 +45,28 @@ export default function SignUp() {
                     <label>
                         Firstname
                         <input type={"text"}
+                               autoComplete={"no"}
                                className={"form-field"} {...register("firstname", {required: "This field is required"})}/>
                         <span>{errors.firstname?.message}</span>
                     </label>
                     <label>
                         Lastname
                         <input type={"text"}
+                               autoComplete={"no"}
                                className={"form-field"} {...register("lastname", {required: "This field is required"})}/>
                         <span>{errors.lastname?.message}</span>
                     </label>
                     <label>
+                        Login
+                        <input type={"text"}
+                               autoComplete={"no"}
+                               className={"form-field"} {...register("login", {required: "This field is required", minLength: {value: 3, message: "Min length of login is 3"}})}/>
+                        <span>{errors.login?.message}</span>
+                    </label>
+                    <label>
                         Password
                         <input type={"password"}
+                               autoComplete={"new-password"}
                                className={"form-field"} {...register(
                             "password", {
                                 required: "This field is required",

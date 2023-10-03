@@ -42,10 +42,11 @@ export default function SignIn() {
                     <label>
                         Password
                         <input type={"password"}
+                               autoComplete={"current-password"}
                                className={"form-field"} {...register(
                             "password", {
                                 required: "This field is required",
-                                minLength: {"value": 8, message: "Min length must be 8 and more"}
+                                minLength: {"value": 8, message: "Min length must be 8 and more"},
                             }
                         )} />
                         <span>{errors.password?.message}</span>

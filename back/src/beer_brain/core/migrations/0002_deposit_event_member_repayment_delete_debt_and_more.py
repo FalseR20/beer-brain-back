@@ -6,7 +6,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("beer_brain_core", "0001_initial"),
+        ("core", "0001_initial"),
     ]
 
     operations = [
@@ -59,14 +59,14 @@ class Migration(migrations.Migration):
                     "event",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="beer_brain_core.event",
+                        to="core.event",
                     ),
                 ),
                 (
                     "user",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="beer_brain_core.user",
+                        to="core.user",
                     ),
                 ),
             ],
@@ -88,7 +88,7 @@ class Migration(migrations.Migration):
                     "event",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="beer_brain_core.event",
+                        to="core.event",
                     ),
                 ),
                 (
@@ -96,7 +96,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="payer_member_id",
-                        to="beer_brain_core.member",
+                        to="core.member",
                     ),
                 ),
                 (
@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="recipient_member_id",
-                        to="beer_brain_core.member",
+                        to="core.member",
                     ),
                 ),
             ],
@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
             model_name="deposit",
             name="member",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="beer_brain_core.member"
+                on_delete=django.db.models.deletion.CASCADE, to="core.member"
             ),
         ),
     ]

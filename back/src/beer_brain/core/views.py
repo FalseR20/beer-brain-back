@@ -1,11 +1,17 @@
 from django.db.models import QuerySet
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from . import models, serializers
+from .serializers import CreateUserSerializer
+
+
+class RegistrationViewSet(ModelViewSet):
+    permission_classes = (AllowAny,)
+    serializer_class = CreateUserSerializer
 
 
 class EventsAPIView(APIView):

@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("beer_brain_core", "0002_deposit_event_member_repayment_delete_debt_and_more"),
+        ("core", "0002_deposit_event_member_repayment_delete_debt_and_more"),
     ]
 
     operations = [

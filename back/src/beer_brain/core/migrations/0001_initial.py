@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="creditor_user_id",
-                        to="beer_brain_core.user",
+                        to="core.user",
                     ),
                 ),
                 (
@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="debtor_user_id",
-                        to="beer_brain_core.user",
+                        to="core.user",
                     ),
                 ),
             ],

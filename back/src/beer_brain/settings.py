@@ -30,7 +30,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # Local apps
-    "beer_brain.auth",
     "beer_brain.core",
     # Django apps
     "django.contrib.admin",

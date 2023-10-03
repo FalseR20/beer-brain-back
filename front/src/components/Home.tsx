@@ -55,7 +55,7 @@ function Debts(): ReactNode {
 function Debt(debtJSON: DebtJSON) {
     console.log(debtJSON);
     return (
-        <div key={`Debt${debtJSON.id}`} className={"debt-div"}>
+        <Link to={`/events/${debtJSON.id}/`} key={`Debt${debtJSON.id}`} className={"debt-div link-button"}>
             <div className={"debt-top"}>
                 <div className={"debt-description"}>
                     <p>{debtJSON.description}</p>
@@ -73,6 +73,6 @@ function Debt(debtJSON: DebtJSON) {
                 </div>
             </div>
 
-        </div>
+        </Link>
     )
 }

@@ -1,7 +1,6 @@
 import {useForm} from "react-hook-form";
 import Page from "../components/Page.tsx";
 import "./Forms.css"
-import {useState} from "react";
 import {signUp} from "../auth/authentication.ts";
 
 interface IFormInputs {
@@ -20,15 +19,11 @@ export default function SignUp() {
         formState: {errors},
     } = useForm<IFormInputs>();
 
-    const [submitButtonText, setSubmitButtonText] = useState("Submit")
-
     function onSubmit(data: IFormInputs) {
         console.log(data);
-        setSubmitButtonText("...")
-        signUp(data.login, data.email, data.firstname, data.lastname, data.password).then(r => r);
-        setTimeout(() => {
-            setSubmitButtonText("Submit")
-        }, 500)
+        signUp(data.login, data.email, data.firstname, data.lastname, data.password).then(() => {
+            window.location.href = "/";
+        });
     }
 
     return (
@@ -75,7 +70,7 @@ export default function SignUp() {
                         )} />
                         <span>{errors.password?.message}</span>
                     </label>
-                    <input type="submit" value={submitButtonText}/>
+                    <input type="submit" value={"Submit"}/>
                 </form>
             </div>
         </Page>

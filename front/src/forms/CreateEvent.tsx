@@ -1,5 +1,5 @@
-import Page from "./Page.tsx";
-import "../forms/Forms.css"
+import Page from "../components/Page.tsx";
+import "./Forms.css"
 import "./CreateEvent.css"
 import {useForm} from "react-hook-form";
 import getAuthHeader from "../auth/authentication.ts";
@@ -21,6 +21,7 @@ async function createEventAPI(inputs: IFormInputs) {
     if (response.ok) {
         const json = await response.json()
         console.log(`Created, ${JSON.stringify(json)}`)
+        return json
     }
 }
 
@@ -34,7 +35,9 @@ export default function CreateEvent() {
 
     function onSubmit(data: IFormInputs) {
         console.log(data);
-        createEventAPI(data).then();
+        createEventAPI(data).then((json) => {
+            window.location.href = `/events/${json.id}`;
+        });
     }
 
     return (

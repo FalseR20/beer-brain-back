@@ -32,3 +32,9 @@ export function signOut(): void{
 export function isAuthorized(): boolean {
     return "token" in localStorage;
 }
+
+export default function getAuthHeader() {
+    return {
+        "Authorization": `Token ${localStorage["token"]}`
+    }
+}

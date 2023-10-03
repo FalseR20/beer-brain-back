@@ -1,20 +1,8 @@
 import Page from "./Page.tsx";
 import "./Home.css"
 import {ReactNode, useEffect, useState} from "react";
-
-export default function Home() {
-    return (
-        <Page isAuthRequired={true}>
-            <div id={"debts-div"}>
-                <p>Active debts</p>
-                <Debts/>
-                <p>Closed debts</p>
-            </div>
-
-        </Page>
-
-    )
-}
+import {Link} from "react-router-dom";
+import getAuthHeader from "../auth/authentication.ts";
 
 interface DebtJSON {
     id: number,
@@ -24,15 +12,30 @@ interface DebtJSON {
     is_closed: boolean
 }
 
+export default function Home() {
+    return (
+        <Page isAuthRequired={true}>
+            <div id={"debts-div"}>
+                <div className={"debt-buttons"}>
+                    <Link className={"debt-button link-button"} to={"/create_event"}>Create event</Link>
+                    <Link className={"debt-button link-button"} to={"/join_event"}>Join event</Link>
+                </div>
+                <p>All debts</p>
+                <Debts/>
+            </div>
+
+        </Page>
+
+    )
+}
+
 function Debts(): ReactNode {
     const [debts, setDebts] = useState<DebtJSON[]>([]);
 
     useEffect(
         () => {
             fetch("http://127.0.0.1:8000/core/common-events/", {
-                headers: {
-                    "Authorization": "Token 8ec432c76c8ac809f9315ba63964980f51136347"
-                }
+                headers: getAuthHeader(),
             }).then(response => response.json())
                 .then(data => setDebts(data));
         }, []

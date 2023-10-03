@@ -1,7 +1,8 @@
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Home from './components/Home.tsx';
 import SignIn from "./forms/SignIn.tsx";
 import SignUp from "./forms/SignUp.tsx";
+import CreateEvent from "./components/CreateEvent.tsx";
 
 function App() {
     return (
@@ -10,6 +11,7 @@ function App() {
                 <Route path='/' element={<Home/>}/>
                 <Route path='/sign_in' element={<SignIn/>}/>
                 <Route path='/sign_up' element={<SignUp/>}/>
+                <Route path='/create_event' element={<CreateEvent/>}/>
             </Routes>
         </Router>
     );

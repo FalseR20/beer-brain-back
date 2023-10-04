@@ -1,8 +1,8 @@
-import Page from "../components/Page.tsx";
-import "./Forms.css"
-import "./CreateEvent.css"
+import Page from "./Page.tsx";
+import "../css/Forms.css"
+import "../css/CreateEvent.css"
 import {useForm} from "react-hook-form";
-import getAuthHeader from "../auth/authentication.ts";
+import getAuthHeader from "../authentication.ts";
 
 
 interface IFormInputs {

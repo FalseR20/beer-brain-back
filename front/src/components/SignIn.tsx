@@ -1,7 +1,7 @@
 import {useForm} from "react-hook-form";
-import Page from "../components/Page.tsx";
-import "./Forms.css"
-import {signIn} from "../auth/authentication.ts";
+import Page from "./Page.tsx";
+import "../css/Forms.css"
+import {signIn} from "../authentication.ts";
 
 interface IFormInputs {
     user: string

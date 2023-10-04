@@ -1,8 +1,8 @@
 import Page from "./Page.tsx";
-import "./Home.css"
+import "../css/Home.css"
 import {ReactNode, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import getAuthHeader from "../auth/authentication.ts";
+import getAuthHeader from "../authentication.ts";
 
 interface DebtJSON {
     id: number,

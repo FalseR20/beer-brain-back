@@ -1,7 +1,7 @@
 import {ReactNode} from "react";
-import "./Page.css"
+import "../css/Page.css"
 import {Link} from "react-router-dom";
-import {isAuthorized, signOut} from "../auth/authentication.ts";
+import {isAuthorized, signOut} from "../authentication.ts";
 import Guest from "./Guest.tsx";
 
 

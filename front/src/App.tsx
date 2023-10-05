@@ -4,6 +4,7 @@ import SignIn from "./components/SignIn.tsx";
 import SignUp from "./components/SignUp.tsx";
 import CreateEvent from "./components/CreateEvent.tsx";
 import Event from "./components/Event.tsx";
+import NotFound from "./components/NotFound.tsx";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Route path='/sign_up' element={<SignUp/>}/>
                 <Route path='/create_event' element={<CreateEvent/>}/>
                 <Route path='/events/:event_id' element={<Event/>}/>
+                <Route path='*' element={<NotFound/>}/>
             </Routes>
         </Router>
     );

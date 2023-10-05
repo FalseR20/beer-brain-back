@@ -1,4 +1,5 @@
 from django.db.models import QuerySet
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -26,7 +27,13 @@ class EventsAPIView(APIView):
         return Response(serializer.data)
 
 
-class CreateEventViewSet(ModelViewSet):
+class CreateEventViewSet(generics.CreateAPIView):
     permission_classes = (IsAuthenticated, )
     queryset = models.Event
     serializer_class = serializers.CreateEventSerializer
+
+
+class GetEventFull(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = models.Event.objects.all()
+    serializer_class = serializers.GetFullEvent

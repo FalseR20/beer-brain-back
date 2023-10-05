@@ -37,7 +37,7 @@ export default function Event() {
 }
 
 function EventValidated(event_id: number) {
-    const [event, setEvent] = useState<IEvent[]>([]);
+    const [event, setEvent] = useState<IEvent | undefined>(undefined);
     useEffect(
         () => {
             fetch(`http://127.0.0.1:8000/core/events/${event_id}`, {
@@ -50,9 +50,16 @@ function EventValidated(event_id: number) {
         }, [event_id]
     )
 
+
+    if (event == undefined) {
+        return (
+            <Page/>
+        )
+    }
+
     return (
         <Page>
-            <h1>Event {event_id}</h1>
+            <h1>Event {event.description}</h1>
             <h2>Event info:</h2>
             <code style={{"whiteSpace": "break-spaces"}}>{JSON.stringify(event, null, 3)}</code>
         </Page>

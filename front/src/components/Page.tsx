@@ -6,7 +6,7 @@ import Guest from "./Guest.tsx";
 
 
 interface PageProps {
-    children: ReactNode;
+    children?: ReactNode;
     isAuthRequired?: boolean;
 }
 

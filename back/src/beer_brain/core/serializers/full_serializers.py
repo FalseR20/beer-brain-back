@@ -33,6 +33,11 @@ class CommonEventSerializer(serializers.ModelSerializer):
         model = models.Event
         fields = "__all__"
 
+    def retrieve(self):
+        request: Request = self.context["request"]
+        members = models.Member.objects.filter(user=request.user)
+        return [member.event for member in members]
+
     @staticmethod
     def get_members_count(event: models.Event):
         return event.members.count()

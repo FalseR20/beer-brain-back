@@ -3,29 +3,31 @@ import Page from "./Page.tsx";
 import {useEffect, useState} from "react";
 import NotFound from "./NotFound.tsx";
 import getAuthHeader from "../authentication.ts";
+import "../css/Event.css"
 
 interface IEvent {
     id: number,
     date: string,
     description: string,
     is_closed: boolean,
-    members: [
-        {
-            id: number,
-            user: number,
-            event: number,
-            deposits: [
-                {
-                    id: number,
-                    description: string,
-                    value: number,
-                }
-            ]
-        },
-    ]
+    members: IMember[]
 
 }
 
+interface IMember {
+    id: number,
+    user: number,
+    event: number,
+    deposits: IDeposit[]
+}
+
+
+interface IDeposit {
+    id: number,
+    description: string,
+    value: number,
+    member: number,
+}
 
 export default function Event() {
     const params = useParams();
@@ -59,7 +61,24 @@ function EventValidated(event_id: number) {
 
     return (
         <Page>
-            <h1>Event {event.description}</h1>
+            <textarea>{event.description}</textarea>
+            <h2>Bank</h2>
+            <table>
+                <tr>
+                    <td>Description</td>
+                    <td>Value</td>
+                    <td>User</td>
+                </tr>
+                {event.members.map(member =>
+                    member.deposits.map(deposit => (
+                            <tr>
+                                <td>{deposit.description}</td>
+                                <td>{deposit.value}</td>
+                                <td>{deposit.id}</td>
+                            </tr>
+                        )
+                    ))}
+            </table>
             <h2>Event info:</h2>
             <code style={{"whiteSpace": "break-spaces"}}>{JSON.stringify(event, null, 3)}</code>
         </Page>

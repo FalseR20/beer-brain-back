@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db.models import QuerySet
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -7,12 +8,12 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from . import models, serializers
-from .serializers import CreateUserSerializer
 
 
-class RegistrationViewSet(ModelViewSet):
+class UserViewSet(ModelViewSet):
     permission_classes = (AllowAny,)
-    serializer_class = CreateUserSerializer
+    serializer_class = serializers.UserSerializer
+    queryset = User.objects.all()
 
 
 class EventsAPIView(APIView):
@@ -20,7 +21,7 @@ class EventsAPIView(APIView):
 
     def get(self, request: Request):
         members: QuerySet[models.Member] = models.Member.objects.filter(
-            user__auth_user=request.user
+            user=request.user
         )
         events = [member.event for member in members]
         serializer = serializers.CommonEventSerializer(events, many=True)

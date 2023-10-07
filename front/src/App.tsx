@@ -5,12 +5,14 @@ import SignUp from "./components/SignUp.tsx";
 import CreateEvent from "./components/CreateEvent.tsx";
 import Event from "./components/Event.tsx";
 import NotFound from "./components/NotFound.tsx";
+import Guest from "./components/Guest.tsx";
 
 function App() {
     return (
         <Router>
             <Routes>
                 <Route path='/' element={<Home/>}/>
+                <Route path='/guest' element={<Guest/>}/>
                 <Route path='/sign_in' element={<SignIn/>}/>
                 <Route path='/sign_up' element={<SignUp/>}/>
                 <Route path='/create_event' element={<CreateEvent/>}/>

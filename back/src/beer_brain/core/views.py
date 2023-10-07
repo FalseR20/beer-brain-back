@@ -14,16 +14,16 @@ class UserViewSet(generics.CreateAPIView):
 class EventsAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
-    serializer_class = serializers.CommonEventSerializer
+    serializer_class = serializers.MembersCountEventSerializer
 
 
 class CreateEventViewSet(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
-    serializer_class = serializers.CreateEventSerializer
+    serializer_class = serializers.EventSerializer
 
 
 class GetEventFull(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
-    serializer_class = serializers.GetFullEvent
+    serializer_class = serializers.FullEventSerializer

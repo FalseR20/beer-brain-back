@@ -1,54 +1,80 @@
-import {useForm} from "react-hook-form";
 import Page from "./Page.tsx";
 import "../css/Forms.css"
+import {Button, Form, InputGroup} from "react-bootstrap";
+import {Formik} from 'formik';
+import * as yup from 'yup';
 import {signIn} from "../authentication.ts";
-
-interface IFormInputs {
-    user: string
-    password: string
-}
 
 
 export default function SignIn() {
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-    } = useForm<IFormInputs>();
-    function onSubmit(data: IFormInputs) {
-        console.log(data);
-        signIn(data.user, data.password).then(() => {
-            window.location.href = "/";
-        });
-    }
-
     return (
         <Page>
             <div id={"form-back"}>
                 <h1> Sign In</h1>
-                <form onSubmit={handleSubmit(onSubmit)} method={"POST"}>
-                    {/* register your input into the hook by invoking the "register" function */}
-                    <label>
-                        Email or login
-                        <input type={"text"}
-                               className={"form-field"} {...register("user", {required: "This field is required"})}/>
-                        <span>{errors.user?.message}</span>
-
-                    </label>
-                    <label>
-                        Password
-                        <input type={"password"}
-                               autoComplete={"current-password"}
-                               className={"form-field"} {...register(
-                            "password", {
-                                required: "This field is required",
-                                minLength: {"value": 8, message: "Min length must be 8 and more"},
+                <Formik
+                    validationSchema={yup.object().shape({
+                        username: yup.string().required(),
+                        password: yup.string().required(),
+                    })}
+                    onSubmit={(values, formikHelpers) => {
+                        console.log(values);
+                        signIn(values.username, values.password).then((is_success) => {
+                            if (is_success) {
+                                window.location.href = "/";
+                            } else {
+                                formikHelpers.setSubmitting(false);
+                                const message = "Wrong password or login"
+                                formikHelpers.setFieldError("username", message)
+                                formikHelpers.setFieldError("password", message)
                             }
-                        )} />
-                        <span>{errors.password?.message}</span>
-                    </label>
-                    <input type="submit" value={"Submit"}/>
-                </form>
+
+                        })
+                    }}
+                    initialValues={{
+                        username: '',
+                        password: '',
+                    }}
+                >
+                    {({handleSubmit, handleChange, values, errors}) => (
+                        <Form noValidate onSubmit={handleSubmit}>
+                            <Form.Group controlId="validationFormikUsername">
+                                <Form.Label>Username</Form.Label>
+                                <InputGroup hasValidation>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Username"
+                                        aria-describedby="inputGroupPrepend"
+                                        name="username"
+                                        value={values.username}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.username}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.username}
+                                    </Form.Control.Feedback>
+                                </InputGroup>
+                            </Form.Group>
+                            <Form.Group controlId="validationFormikPassword">
+                                <Form.Label>Password</Form.Label>
+                                <InputGroup hasValidation>
+                                    <Form.Control
+                                        type="password"
+                                        placeholder="Password"
+                                        aria-describedby="inputGroupPrepend"
+                                        name="password"
+                                        value={values.password}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.password}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.password}
+                                    </Form.Control.Feedback>
+                                </InputGroup>
+                            </Form.Group>
+                            <Button type="submit">Submit</Button>
+                        </Form>
+                    )}
+                </Formik>
             </div>
         </Page>
 

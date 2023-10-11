@@ -1,79 +1,177 @@
-import {useForm} from "react-hook-form";
+import { signUp } from "../authentication.ts";
 import Page from "./Page.tsx";
-import "../css/Forms.css"
-import {signUp} from "../authentication.ts";
+import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
+import { Formik } from "formik";
+import * as yup from "yup";
 
-interface IFormInputs {
-    login: string
-    email: string
-    firstname: string
-    lastname: string
-    password: string
-}
+export default function SignIn() {
+  return (
+    <Page>
+      <div id={"form-back"}>
+        <h1> Sign Up</h1>
+        <Formik
+          validationSchema={yup.object().shape({
+            email: yup.string().email().required(),
+            firstname: yup.string().required(),
+            lastname: yup.string().required(),
+            username: yup.string().required(),
+            password: yup.string().required().min(8),
+            passwordConfirmation: yup
+              .string()
+              .required()
+              .oneOf([yup.ref("password")]),
+          })}
+          onSubmit={(values, formikHelpers) => {
+            console.log(values);
+            signUp(
+              values.username,
+              values.email,
+              values.firstname,
+              values.lastname,
+              values.password,
+            ).then((is_success) => {
+              if (is_success) {
+                window.location.href = "/";
+              } else {
+                formikHelpers.setSubmitting(false);
+                formikHelpers.setFieldError("username", "User already exists");
+              }
+            });
+          }}
+          initialValues={{
+            email: "",
+            firstname: "",
+            lastname: "",
+            username: "",
+            password: "",
+            passwordConfirmation: "",
+          }}
+          // validateOnChange={false}
+          // validateOnBlur={false}
+        >
+          {({ handleSubmit, handleBlur, handleChange, errors }) => (
+            <Form noValidate onSubmit={handleSubmit}>
+              <Row>
+                <Col>
+                  <Form.Group controlId="validationFormikFirstname">
+                    <Form.Label>Firstname</Form.Label>
+                    <InputGroup hasValidation>
+                      <Form.Control
+                        type="text"
+                        placeholder="Firstname"
+                        aria-describedby="inputGroupPrepend"
+                        name="firstname"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.firstname}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.firstname}
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="validationFormikLastname">
+                    <Form.Label>Lastname</Form.Label>
+                    <InputGroup hasValidation>
+                      <Form.Control
+                        type="text"
+                        placeholder="Lastname"
+                        aria-describedby="inputGroupPrepend"
+                        name="lastname"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.lastname}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.lastname}
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                  </Form.Group>
+                </Col>
+              </Row>
 
-
-export default function SignUp() {
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-    } = useForm<IFormInputs>();
-
-    function onSubmit(data: IFormInputs) {
-        console.log(data);
-        signUp(data.login, data.email, data.firstname, data.lastname, data.password).then(() => {
-            window.location.href = "/";
-        });
-    }
-
-    return (
-        <Page>
-            <div id={"form-back"}>
-                <h1> Sign Up</h1>
-                <form onSubmit={handleSubmit(onSubmit)} method={"POST"}>
-                    <label>
-                        Email
-                        <input type={"email"}
-                               className={"form-field"} {...register("email", {required: "This field is required"})}/>
-                        <span>{errors.email?.message}</span>
-                    </label>
-                    <label>
-                        Firstname
-                        <input type={"text"}
-                               autoComplete={"no"}
-                               className={"form-field"} {...register("firstname", {required: "This field is required"})}/>
-                        <span>{errors.firstname?.message}</span>
-                    </label>
-                    <label>
-                        Lastname
-                        <input type={"text"}
-                               autoComplete={"no"}
-                               className={"form-field"} {...register("lastname", {required: "This field is required"})}/>
-                        <span>{errors.lastname?.message}</span>
-                    </label>
-                    <label>
-                        Login
-                        <input type={"text"}
-                               autoComplete={"no"}
-                               className={"form-field"} {...register("login", {required: "This field is required", minLength: {value: 3, message: "Min length of login is 3"}})}/>
-                        <span>{errors.login?.message}</span>
-                    </label>
-                    <label>
-                        Password
-                        <input type={"password"}
-                               autoComplete={"new-password"}
-                               className={"form-field"} {...register(
-                            "password", {
-                                required: "This field is required",
-                                minLength: {"value": 8, message: "Min length must be 8 and more"}
-                            }
-                        )} />
-                        <span>{errors.password?.message}</span>
-                    </label>
-                    <input type="submit" value={"Submit"}/>
-                </form>
-            </div>
-        </Page>
-
-    );
+              <Form.Group controlId="validationFormikEmail">
+                <Form.Label>Email</Form.Label>
+                <InputGroup hasValidation>
+                  <Form.Control
+                    type="email"
+                    placeholder="Email"
+                    aria-describedby="inputGroupPrepend"
+                    name="email"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={!!errors.email}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.email}
+                  </Form.Control.Feedback>
+                </InputGroup>
+              </Form.Group>
+              <Form.Group controlId="validationFormikUsername">
+                <Form.Label>Username</Form.Label>
+                <InputGroup hasValidation>
+                  <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                  <Form.Control
+                    type="text"
+                    placeholder="Username"
+                    aria-describedby="inputGroupPrepend"
+                    name="username"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={!!errors.username}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.username}
+                  </Form.Control.Feedback>
+                </InputGroup>
+              </Form.Group>
+              <Row>
+                <Col>
+                  <Form.Group controlId="validationFormikPassword">
+                    <Form.Label>Password</Form.Label>
+                    <InputGroup hasValidation>
+                      <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        aria-describedby="inputGroupPrepend"
+                        name="password"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.password}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.password}
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="validationFormikPasswordConfirmation">
+                    <Form.Label>Password confirmation</Form.Label>
+                    <InputGroup hasValidation>
+                      <Form.Control
+                        type="password"
+                        placeholder="Repeat password"
+                        aria-describedby="inputGroupPrepend"
+                        name="passwordConfirmation"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.passwordConfirmation}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.passwordConfirmation}
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Button type="submit">Submit</Button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </Page>
+  );
 }

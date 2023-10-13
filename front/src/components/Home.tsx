@@ -3,6 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import getAuthHeader from "../authentication.ts";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import NewEventModal from "./NewEventModal.tsx";
+import JoinEventModal from "./JoinEventModal.tsx";
 
 interface DebtJSON {
   id: number,
@@ -13,21 +14,24 @@ interface DebtJSON {
 }
 
 export default function Home() {
-  const [show, setShow] = useState(false);
+  const [showNewEventModal, setShowNewEventModal] = useState(false);
+  const [showJoinEventModal, setShowJoinEventModal] = useState(false);
 
 
   return <Page isAuthRequired={true}>
     <div className={"d-flex justify-content-between my-4"}>
       <span className={"fs-1"}>All debts</span>
       <div className={"d-flex flex-row-reverse"}>
-        <Button className={"fs-3 ms-4"} variant={"success"} size={"lg"} onClick={() => setShow(true)}>
+        <Button className={"fs-3 ms-4"} variant={"success"} size={"lg"} onClick={() => setShowNewEventModal(true)}>
           Create event
         </Button>
 
-        <Button className={"fs-3"} variant={"outline-success  "} size={"lg"} href={"/join_event"}>Join event</Button>
+        <Button className={"fs-3"} variant={"outline-success"} size={"lg"}
+                onClick={() => setShowJoinEventModal(true)}>Join event</Button>
       </div>
     </div>
-    <NewEventModal show={show} onHide={() => setShow(false)} />
+    <NewEventModal show={showNewEventModal} onHide={() => setShowNewEventModal(false)} />
+    <JoinEventModal show={showJoinEventModal} onHide={() => setShowJoinEventModal(false)} />
     <Debts />
   </Page>;
 }

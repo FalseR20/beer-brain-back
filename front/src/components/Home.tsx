@@ -43,27 +43,30 @@ function Debts(): ReactNode {
   }, []);
 
   return (<Row xs={1} md={2} className={"g-3"}>
-      {debts.map((debt => (<Col key={`Debt${debt.id}`}>
-        <Card className={"p-0"} border={debt.is_closed ? "secondary" : "primary"}>
-          <Card.Header>
-            <Row>
-              <Col>
-                <span>{debt.date}</span>
-              </Col>
-              <Col>
-                <span className={"text-end"}>{}</span>
-              </Col>
-            </Row>
-          </Card.Header>
-          <Card.Body>
-            <Card.Title>{debt.description}</Card.Title>
-            <Card.Text>{debt.members_count} members</Card.Text>
-            <Row className={"mx-0"}>
-              <Button variant={"primary"} size={"lg"} href={`/events/${debt.id}/`}>Look</Button>
-            </Row>
-          </Card.Body>
-        </Card>
-      </Col>)))}
+      {debts.map((debt => {
+        const variant = debt.is_closed ? "secondary" : "primary";
+        return (<Col key={`Debt${debt.id}`}>
+          <Card className={"p-0"} border={variant}>
+            <Card.Header>
+              <Row>
+                <Col>
+                  <span>{debt.date}</span>
+                </Col>
+                <Col>
+                  <span className={"text-end"}>{}</span>
+                </Col>
+              </Row>
+            </Card.Header>
+            <Card.Body>
+              <Card.Title>{debt.description}</Card.Title>
+              <Card.Text>{debt.members_count} members</Card.Text>
+              <Row className={"mx-0"}>
+                <Button variant={variant} size={"lg"} href={`/events/${debt.id}/`}>Look</Button>
+              </Row>
+            </Card.Body>
+          </Card>
+        </Col>);
+      }))}
     </Row>
 
   );

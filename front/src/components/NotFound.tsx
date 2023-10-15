@@ -3,10 +3,12 @@ import Template from "./Template.tsx";
 export default function NotFound() {
   return (
     <Template>
-      <h1 style={{ fontSize: "14rem" }}>4 0 4</h1>
-      <h2 style={{ fontSize: "5rem", textAlign: "center" }}>
-        Bruh, how did you go here?
-      </h2>
+      <div className={"d-flex flex-column align-items-center"}>
+        <span className={"fw-bold"} style={{ fontSize: "20rem" }}>
+          4 0 4
+        </span>
+        <span style={{ fontSize: "4rem" }}>Bruh, how did you go here?</span>
+      </div>
     </Template>
   );
 }

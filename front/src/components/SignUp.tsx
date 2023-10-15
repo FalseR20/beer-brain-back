@@ -1,12 +1,12 @@
 import { signUp } from "../authentication.ts";
-import Page from "./Page.tsx";
+import Template from "./Template.tsx";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
 
 export default function SignIn() {
   return (
-    <Page>
+    <Template>
       <div id={"form-back"}>
         <h1> Sign Up</h1>
         <Formik
@@ -172,6 +172,6 @@ export default function SignIn() {
           )}
         </Formik>
       </div>
-    </Page>
+    </Template>
   );
 }

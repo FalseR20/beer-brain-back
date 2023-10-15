@@ -1,4 +1,4 @@
-import Page from "./Page.tsx";
+import Template from "./Template.tsx";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { signIn } from "../authentication.ts";
 import { Formik } from "formik";
@@ -6,7 +6,7 @@ import * as yup from "yup";
 
 export default function SignIn() {
   return (
-    <Page>
+    <Template>
       <div id={"form-back"}>
         <h1> Sign In</h1>
         <Formik
@@ -73,6 +73,6 @@ export default function SignIn() {
           )}
         </Formik>
       </div>
-    </Page>
+    </Template>
   );
 }

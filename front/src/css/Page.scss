@@ -1,63 +1,7 @@
-body {
-    margin: 0;
+#theme-switcher:hover {
+  cursor: pointer;
 }
 
-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    background-color: #ffe461;
+.width-60 {
+  width: 60rem;
 }
-
-header > div {
-    width: 70rem;
-    height: 5rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#project-name {
-    font-weight: bold;
-}
-
-.link-button {
-    color: #000000;
-    text-decoration: none;
-}
-
-.nav-sign {
-    color: #000000;
-    font-size: 2rem;
-    text-decoration: none;
-    font-family: sans-serif;
-    margin-left: 2rem;
-}
-
-footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    background-color: #b6b6b6;
-}
-
-footer > h4 {
-    width: 60rem;
-    text-align: center;
-}
-
-#common-field {
-    width: 60rem;
-    margin: 0 auto;
-}
-
-a:hover {
-    cursor: pointer;
-}
-
-.white-content {
-    background: #e4e4e4;
-}
-
-@import '../../node_modules/bootstrap/scss/bootstrap';

@@ -56,14 +56,10 @@ export function SignGroup() {
     </>
   ) : (
     <>
-      <Button
-        variant={"outline-secondary"}
-        className={"me-3"}
-        href={"/sign_in"}
-      >
+      <Button variant={"outline-success"} className={"me-3"} href={"/sign_in"}>
         Sign In
       </Button>
-      <Button variant={"secondary"} className={"me-3"} href={"/sign_up"}>
+      <Button variant={"success"} className={"me-3"} href={"/sign_up"}>
         Sign Up
       </Button>
     </>

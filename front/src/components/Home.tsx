@@ -20,24 +20,21 @@ export default function Home() {
   return (
     <Template isAuthRequired={true}>
       <div className={"d-flex justify-content-between my-4"}>
-        <span className={"fs-1"}>All debts</span>
-        <div className={"d-flex flex-row-reverse"}>
+        <span className={"fs-3"}>All debts</span>
+        <div className={"d-flex flex-row"}>
           <Button
-            className={"fs-3 ms-4"}
-            variant={"success"}
-            size={"lg"}
-            onClick={() => setShowNewEventModal(true)}
-          >
-            Create event
-          </Button>
-
-          <Button
-            className={"fs-3"}
+            className={"fs-5"}
             variant={"outline-success"}
-            size={"lg"}
             onClick={() => setShowJoinEventModal(true)}
           >
             Join event
+          </Button>
+          <Button
+            className={"fs-5 ms-4"}
+            variant={"success"}
+            onClick={() => setShowNewEventModal(true)}
+          >
+            Create event
           </Button>
         </div>
       </div>

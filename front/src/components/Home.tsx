@@ -1,7 +1,7 @@
 import Template from "./Template.tsx";
 import { ReactNode, useEffect, useState } from "react";
 import getAuthHeader from "../authentication.ts";
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Alert, Button, Card, Col, Row } from "react-bootstrap";
 import NewEventModal from "./NewEventModal.tsx";
 import JoinEventModal from "./JoinEventModal.tsx";
 
@@ -19,25 +19,30 @@ export default function Home() {
 
   return (
     <Template isAuthRequired={true}>
-      <div className={"d-flex justify-content-between my-4"}>
-        <span className={"fs-3"}>All debts</span>
-        <div className={"d-flex flex-row"}>
+      <Alert variant="light" className={"my-3 bg-body-tertiary"}>
+        <Alert.Heading>All events</Alert.Heading>
+        <p>
+          There are all debts. You can create a new one or join to the existed
+          one.
+        </p>
+        <hr />
+        <div className={"d-flex flex-row justify-content-end"}>
           <Button
-            className={"fs-5"}
+            className={"fs-6"}
             variant={"outline-success"}
             onClick={() => setShowJoinEventModal(true)}
           >
             Join event
           </Button>
           <Button
-            className={"fs-5 ms-4"}
+            className={"fs-6 ms-4"}
             variant={"success"}
             onClick={() => setShowNewEventModal(true)}
           >
             Create event
           </Button>
         </div>
-      </div>
+      </Alert>
       <NewEventModal
         show={showNewEventModal}
         onHide={() => setShowNewEventModal(false)}

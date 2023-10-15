@@ -5,7 +5,7 @@ import { BsMoon, BsSun } from "react-icons/bs";
 
 export default function Header() {
   return (
-    <header className="d-flex flex-row justify-content-center bg-body-tertiary">
+    <header className="d-flex flex-row justify-content-center bg-body-tertiary border-bottom">
       <Navbar
         className={
           "d-flex flex-row justify-content-between align-items-center width-60"

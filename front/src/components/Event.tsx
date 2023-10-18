@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import NotFound from "./NotFound.tsx";
 import getAuthHeader from "../authentication.ts";
 import "../css/Event.css";
-import { Col, Container, Form, InputGroup, Row } from "react-bootstrap";
+import { Button, Form, InputGroup, Modal, Table } from "react-bootstrap";
 import { BsPencil } from "react-icons/bs";
 
 interface IEvent {
@@ -53,53 +53,78 @@ export default function Event() {
 
 
 function EventValidated({ event }: { event: IEvent }) {
-  function updateDescription(newDescription: string) {
-    if (event.description == newDescription) {
-      return;
-    }
-    console.log(`Updated description ${newDescription}`);
-    event.description = newDescription;
-  }
-
+  const [showDescriptionModal, setShowDescriptionModal] = useState(false);
+  const [description, setDescription] = useState(event.description);
+  const [newDescription, setNewDescription] = useState<string | null>(null);
 
   return (<Template>
     <InputGroup className={"my-3"} size={"lg"}>
-      <InputGroup.Text id={"name-addon"}>
-        <BsPencil />
-      </InputGroup.Text>
       <Form.Control
         id={"description-input"}
         aria-label={"Description"}
-        aria-describedby={"name-addon"}
-        defaultValue={event.description}
-        onBlur={({ target }) => updateDescription(target.value)}
-        onKeyDown={({ key, currentTarget }) => {
-          if (key == "Enter") {
-            currentTarget.blur();
-          }
-        }}
+        disabled={true}
+        value={description}
       />
+      <Button variant={"secondary"} id={"name-addon"} onClick={() => setShowDescriptionModal(true)}>
+        <BsPencil />
+      </Button>
     </InputGroup>
+    <Modal show={showDescriptionModal} onHide={() => setShowDescriptionModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Modal heading</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group
+            className="mb-3"
+            controlId="exampleForm.ControlTextarea1"
+          >
+            <Form.Label>New description</Form.Label>
+            <Form.Control as="textarea" rows={3} defaultValue={description} onChange={(e) => {
+              setNewDescription(e.target.value);
+            }} />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="outline-secondary" onClick={() => setShowDescriptionModal(false)}>
+          Close
+        </Button>
+        <Button id={"btn-modal-ok"} variant="primary" onClick={() => {
+          if (newDescription != description) {
+            console.log(`New description ${newDescription}`);
+            setDescription(newDescription!);
+          }
+          setShowDescriptionModal(false);
+        }}>
+          Save Changes
+        </Button>
+      </Modal.Footer>
+    </Modal>
 
-    <h2>Bank</h2>
-    <Container>
-      <Row key={"0"}>
-        <Col>Description</Col>
-        <Col>Value</Col>
-        <Col>User</Col>
-      </Row>
-      {event.members.map((member) => member.deposits.map((deposit) => <Row key={deposit.id}>
-        <Col>{deposit.description}</Col>
-        <Col>{deposit.value}</Col>
-        <Col>{deposit.id}</Col>
-      </Row>))}
-    </Container>
 
-    <h2>Event info:</h2>
+    <Table>
+      <thead>
+      <tr>
+        <th>Description</th>
+        <th>Value</th>
+        <th>User</th>
+      </tr>
+      </thead>
+      <tbody>
+      {event.members.map((member) => member.deposits.map((deposit) => <tr key={deposit.id}>
+        <th>{deposit.description}</th>
+        <th>{deposit.value}</th>
+        <th>{deposit.id}</th>
+      </tr>))}
+      </tbody>
 
-    <code style={{ whiteSpace: "break-spaces" }}>
-      {JSON.stringify(event, null, 3)}
-    </code>;
+    </Table>
+
+    {/*<h2>Event info:</h2>*/}
+    {/*<code style={{ whiteSpace: "break-spaces" }}>*/}
+    {/*  {JSON.stringify(event, null, 3)}*/}
+    {/*</code>;*/}
 
   </Template>);
 }

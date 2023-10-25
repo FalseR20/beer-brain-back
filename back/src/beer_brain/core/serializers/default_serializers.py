@@ -11,7 +11,6 @@ class EventSerializer(serializers.ModelSerializer):
         model = models.Event
         fields = ["id", "date", "description", "is_closed", "initiator"]
         extra_kwargs = {
-            "id": {"read_only": True},
             "date": {"read_only": True},
             "is_closed": {"read_only": True},
         }

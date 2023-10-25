@@ -3,12 +3,13 @@ import getAuthHeader from "../authentication.ts";
 import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { URLS } from "../constants.ts";
 
 async function createEventAPI(inputs: { description: string }) {
   console.log(`Create event ${inputs}`);
   const formData = new FormData();
   formData.append("description", inputs.description);
-  const response = await fetch("http://127.0.0.1:8000/core/create-event/", {
+  const response = await fetch(URLS.create_event, {
     method: "POST", headers: getAuthHeader(), body: formData,
   });
   if (response.ok) {

@@ -1,3 +1,5 @@
+import { URLS } from "./constants.ts";
+
 export async function signIn(
   username: string,
   password: string,
@@ -6,7 +8,7 @@ export async function signIn(
   const formData = new FormData();
   formData.append("username", username);
   formData.append("password", password);
-  const response = await fetch("http://127.0.0.1:8000/auth/token/", {
+  const response = await fetch(URLS.get_token, {
     method: "POST",
     body: formData,
   });
@@ -35,7 +37,7 @@ export async function signUp(
   formData.append("first_name", firstname);
   formData.append("last_name", lastname);
   formData.append("password", password);
-  const response = await fetch("http://127.0.0.1:8000/auth/register/", {
+  const response = await fetch(URLS.new_user, {
     method: "POST",
     body: formData,
   });

@@ -4,6 +4,7 @@ import getAuthHeader from "../authentication.ts";
 import { Alert, Button, Card, Col, Row } from "react-bootstrap";
 import NewEventModal from "./NewEventModal.tsx";
 import JoinEventModal from "./JoinEventModal.tsx";
+import { URLS } from "../constants.ts";
 
 interface DebtJSON {
   id: number;
@@ -17,8 +18,7 @@ export default function Home() {
   const [showNewEventModal, setShowNewEventModal] = useState(false);
   const [showJoinEventModal, setShowJoinEventModal] = useState(false);
 
-  return (
-    <Template isAuthRequired={true}>
+  return (<Template isAuthRequired={true}>
       <Alert variant="light" className={"my-3 bg-body-tertiary"}>
         <Alert.Heading>All events</Alert.Heading>
         <p>
@@ -52,35 +52,32 @@ export default function Home() {
         onHide={() => setShowJoinEventModal(false)}
       />
       <Debts />
-    </Template>
-  );
+    </Template>);
 }
 
 function Debts(): ReactNode {
   const [debts, setDebts] = useState<DebtJSON[]>([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/core/common-events/", {
+    fetch(URLS.get_events, {
       headers: getAuthHeader(),
     })
       .then((response) => response.json())
       .then((data) => setDebts(data));
   }, []);
 
-  return (
-    <Row xs={1} md={2} className={"g-3"}>
+  return (<Row xs={1} md={2} className={"g-3"}>
       {debts.map((debt) => {
         const variant = debt.is_closed ? "secondary" : "primary";
-        return (
-          <Col key={`Debt${debt.id}`}>
+        return (<Col key={`Debt${debt.id}`}>
             <Card className={"p-0"} border={variant}>
               <Card.Header>
                 <Row>
                   <Col>
                     <span>{debt.date}</span>
                   </Col>
-                  <Col>
-                    <span className={"text-end"}>{}</span>
+                  <Col className={"text-end"}>
+                    #{debt.id}
                   </Col>
                 </Row>
               </Card.Header>
@@ -98,9 +95,7 @@ function Debts(): ReactNode {
                 </Row>
               </Card.Body>
             </Card>
-          </Col>
-        );
+          </Col>);
       })}
-    </Row>
-  );
+    </Row>);
 }

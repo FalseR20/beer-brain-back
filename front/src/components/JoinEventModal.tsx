@@ -3,14 +3,11 @@ import getAuthHeader from "../authentication.ts";
 import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { URLS } from "../constants.ts";
 
-async function joinEventAPI(inputs: { id: number }) {
+async function joinEventAPI(inputs: { id: number | string }) {
   console.log(`Create event ${inputs}`);
-  const formData = new FormData();
-  formData.append("id", inputs.id);
-  const response = await fetch("http://127.0.0.1:8000/core/join-event/", {
-    method: "POST", headers: getAuthHeader(), body: formData,
-  });
+  const response = await fetch(URLS.join_event(inputs.id), { method: "POST", headers: getAuthHeader() });
   if (response.ok) {
     const json = await response.json();
     console.log(`Joined, ${JSON.stringify(json)}`);

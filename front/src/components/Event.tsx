@@ -6,6 +6,7 @@ import getAuthHeader from "../authentication.ts";
 import "../css/Event.css";
 import { Button, Form, InputGroup, Modal, Table } from "react-bootstrap";
 import { BsPencil } from "react-icons/bs";
+import { URLS } from "../constants.ts";
 
 interface IEvent {
   id: number;
@@ -34,7 +35,7 @@ export default function Event() {
   const params = useParams();
   const event_id = parseInt(params.event_id as string);
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/core/events/${event_id}`, {
+    fetch(URLS.get_full_event(event_id), {
       headers: getAuthHeader(),
     }).then((response) => response.json()).then((data) => {
       console.log(data);

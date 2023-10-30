@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import NotFound from "./NotFound.tsx";
 import getAuthHeader from "../authentication.ts";
 import "../css/Event.css";
-import { Button, Form, InputGroup, Modal, Table } from "react-bootstrap";
-import { BsPencil } from "react-icons/bs";
+import { Button, Form, ListGroup, Modal } from "react-bootstrap";
+import { BsClockHistory, BsPencil } from "react-icons/bs";
 import { URLS } from "../constants.ts";
+import { RxAvatar } from "react-icons/rx";
+import { FiPlusCircle } from "react-icons/fi";
 
 interface IEvent {
   id: number;
@@ -59,20 +61,18 @@ function EventValidated({ event }: { event: IEvent }) {
   const [newDescription, setNewDescription] = useState<string | null>(null);
 
   return (<Template>
-    <InputGroup className={"my-3"} size={"lg"}>
-      <Form.Control
-        id={"description-input"}
-        aria-label={"Description"}
-        disabled={true}
-        value={description}
-      />
-      <Button variant={"secondary"} id={"name-addon"} onClick={() => setShowDescriptionModal(true)}>
-        <BsPencil />
+    <div className={"d-flex align-items-center border-bottom mb-2"}>
+      <h1 className={"my-3 flex-grow-1"}>{description}</h1>
+      <Button variant={"outline-secondary"} size={"lg"} id={"name-addon"} onClick={() => setShowDescriptionModal(true)}>
+        <div className={"mb-1"}><BsPencil /></div>
       </Button>
-    </InputGroup>
+      <Button variant={"outline-secondary"} size={"lg"} id={"history-btn"} className={"ms-2"}>
+        <div className={"mb-1"}><BsClockHistory /></div>
+      </Button>
+    </div>
     <Modal show={showDescriptionModal} onHide={() => setShowDescriptionModal(false)}>
       <Modal.Header closeButton>
-        <Modal.Title>Modal heading</Modal.Title>
+        <Modal.Title>Description updating</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -103,29 +103,50 @@ function EventValidated({ event }: { event: IEvent }) {
       </Modal.Footer>
     </Modal>
 
+    <div className={"mb-1"}>
+      <h5>
+        {event.date}, {event.members.length} people
+      </h5>
+      <ListGroup horizontal={true} variant={"flush"}>
+        {event.members.map((member) => {
+          return <div className={"m-2"} key={member.id}>
+            <RxAvatar size={48} />
+          </div>;
+        })}
+        <div className={"m-2"}>
+          <FiPlusCircle size={48} />
+        </div>
+      </ListGroup>
+    </div>
 
-    <Table>
-      <thead>
-      <tr>
-        <th>Description</th>
-        <th>Value</th>
-        <th>User</th>
-      </tr>
-      </thead>
-      <tbody>
-      {event.members.map((member) => member.deposits.map((deposit) => <tr key={deposit.id}>
-        <th>{deposit.description}</th>
-        <th>{deposit.value}</th>
-        <th>{deposit.id}</th>
-      </tr>))}
-      </tbody>
+    <div className={"d-flex justify-content-between align-items-center"}>
+      <h2 className={"my-3"}>Payers</h2>
+      <Button variant={"success"}>Add payment</Button>
+    </div>
+    <div className={"border border-secondary rounded-3 p-2"}>
+      <ListGroup className={""} variant={"flush"}>
+        {event.members.map((member) => member.deposits.map((deposit) => <>
+          <ListGroup.Item key={deposit.id}>
+            <span>{deposit.description} for {deposit.value}</span>
+          </ListGroup.Item>
+        </>))}
+      </ListGroup>
+    </div>
 
-    </Table>
-
-    {/*<h2>Event info:</h2>*/}
-    {/*<code style={{ whiteSpace: "break-spaces" }}>*/}
-    {/*  {JSON.stringify(event, null, 3)}*/}
-    {/*</code>;*/}
-
+    <h3 className={"mt-4 mb-2"}> Danger Zone </h3>
+    <ListGroup className={"border border-danger rounded-2"} variant={"flush"}>
+      <ListGroup.Item className={"d-flex flex-row align-items-center"}>
+        <span className={"flex-grow-1"}>
+          Leave this event
+        </span>
+        <Button variant={"danger"} className={"my-2"}> Leave </Button>
+      </ListGroup.Item>
+      <ListGroup.Item className={"d-flex flex-row justify-content-between align-items-center"}>
+        <span className={"flex-grow-1"}>
+          Delete this event
+        </span>
+        <Button variant={"danger"} className={"my-2"}> Delete event </Button>
+      </ListGroup.Item>
+    </ListGroup>
   </Template>);
 }

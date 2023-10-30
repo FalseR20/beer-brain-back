@@ -20,6 +20,13 @@ class EventListAPIView(generics.ListAPIView):
     queryset = models.Event.objects.all()
     serializer_class = serializers.MembersCountEventSerializer
 
+    @staticmethod
+    def get(request: Request, **kwargs):
+        members = models.Member.objects.filter(user=request.user)
+        events = [member.event for member in members]
+        serializer = serializers.MembersCountEventSerializer(events, many=True)
+        return Response(serializer.data)
+
 
 class EventCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]

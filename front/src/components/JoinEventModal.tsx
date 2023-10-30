@@ -28,7 +28,7 @@ export default function JoinEventModal(props: { show: boolean, onHide: () => voi
         onSubmit={(values) => {
           console.log(values);
           joinEventAPI(values).then((json) => {
-            window.location.href = `/events/${json.id}`;
+            window.location.href = `/events/${json.event}`;
           });
         }}
         initialValues={{

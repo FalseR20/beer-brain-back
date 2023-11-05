@@ -15,8 +15,10 @@ export default function Template(props: PageProps) {
   return (
     <>
       <Header />
-      <div id={"common-field"} className={"mx-auto width-60"}>
-        {inner}
+      <div className={"d-flex flex-row justify-content-center"}>
+        <div id={"common-field"} className={"width-60 mx-3"}>
+          {inner}
+        </div>
       </div>
     </>
   );

@@ -9,7 +9,7 @@ export default function Header() {
     <header className="d-flex flex-row justify-content-center bg-body-tertiary border-bottom">
       <Navbar
         className={
-          "d-flex flex-row justify-content-between align-items-center width-60"
+          "width-60 mx-3 d-flex flex-row justify-content-between align-items-center"
         }
       >
         <Navbar.Brand href={"/"} className={"fs-3"}>

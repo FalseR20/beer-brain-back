@@ -27,4 +27,10 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-Then you can run front-end application.
+Run backend server:
+
+```shell
+./manage.py runserver --noreload 192.168.100.5:8000
+```
+
+Then you can run [front-end application](../front/).

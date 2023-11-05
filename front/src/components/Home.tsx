@@ -18,8 +18,9 @@ export default function Home() {
   const [showNewEventModal, setShowNewEventModal] = useState(false);
   const [showJoinEventModal, setShowJoinEventModal] = useState(false);
 
-  return (<Template isAuthRequired={true}>
-      <Alert variant="light" className={"my-3 bg-body-tertiary"}>
+  return (
+    <Template isAuthRequired={true}>
+      <Alert variant="light" className={"mb-3 bg-body-tertiary"}>
         <Alert.Heading>All events</Alert.Heading>
         <p>
           There are all debts. You can create a new one or join to the existed
@@ -52,7 +53,8 @@ export default function Home() {
         onHide={() => setShowJoinEventModal(false)}
       />
       <Debts />
-    </Template>);
+    </Template>
+  );
 }
 
 function Debts(): ReactNode {
@@ -66,19 +68,19 @@ function Debts(): ReactNode {
       .then((data) => setDebts(data));
   }, []);
 
-  return (<Row xs={1} md={2} className={"g-3"}>
+  return (
+    <Row xs={1} md={2} className={"g-3"}>
       {debts.map((debt) => {
         const variant = debt.is_closed ? "secondary" : "primary";
-        return (<Col key={`Debt${debt.id}`}>
+        return (
+          <Col key={`Debt${debt.id}`}>
             <Card className={"p-0"} border={variant}>
               <Card.Header>
                 <Row>
                   <Col>
                     <span>{debt.date}</span>
                   </Col>
-                  <Col className={"text-end"}>
-                    #{debt.id}
-                  </Col>
+                  <Col className={"text-end"}>#{debt.id}</Col>
                 </Row>
               </Card.Header>
               <Card.Body>
@@ -95,7 +97,9 @@ function Debts(): ReactNode {
                 </Row>
               </Card.Body>
             </Card>
-          </Col>);
+          </Col>
+        );
       })}
-    </Row>);
+    </Row>
+  );
 }

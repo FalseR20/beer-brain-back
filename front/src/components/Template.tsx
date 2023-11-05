@@ -14,11 +14,16 @@ export default function Template(props: PageProps) {
     props.isAuthRequired == true && !isAuthorized() ? Guest() : props.children;
   return (
     <>
-      <Header />
-      <div className={"d-flex flex-row justify-content-center"}>
-        <div id={"common-field"} className={"width-60 mx-3"}>
-          {inner}
+      <div className={"d-flex flex-column min-vh-100"}>
+        <Header />
+        <div className={"d-flex flex-row justify-content-center flex-grow-1"}>
+          <div id={"common-field"} className={"width-60 m-3"}>
+            {inner}
+          </div>
         </div>
+        <footer className="bg-body-tertiary border-top text-center text-white-50 p-2">
+          &copy; FalseR / Bebra Bebrou
+        </footer>
       </div>
     </>
   );

@@ -68,7 +68,7 @@ function EventValidated({ event }: { event: IEvent }) {
   return (
     <Template>
       <div className={"d-flex align-items-center border-bottom mb-2"}>
-        <h1 className={"my-3 flex-grow-1"}>{description}</h1>
+        <h1 className={"mb-3 flex-grow-1"}>{description}</h1>
         <Button
           variant={"outline-secondary"}
           size={"lg"}

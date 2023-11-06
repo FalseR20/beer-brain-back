@@ -30,6 +30,12 @@ python manage.py runserver
 Run backend server:
 
 ```shell
+./manage.py runserver --noreload 
+```
+
+Or for visibility on the network:
+
+```shell
 ./manage.py runserver --noreload 192.168.100.5:8000
 ```
 

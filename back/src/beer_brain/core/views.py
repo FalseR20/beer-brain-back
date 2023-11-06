@@ -15,6 +15,22 @@ class UserCreateAPIView(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
 
 
+class ProfileRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = models.Profile.objects.all()
+    serializer_class = serializers.PublicProfileSerializer
+
+
+class SelfProfileRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = models.Profile.objects.all()
+    serializer_class = serializers.PrivateProfileSerializer
+
+    def retrieve(self, request: Request, *args, **kwargs):
+        profile: models.Profile = self.queryset.get(auth_user=request.user)
+        return Response(self.serializer_class(profile).data)
+
+
 class EventListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()

@@ -1,4 +1,4 @@
 from .default_serializers import EventSerializer, MemberSerializer
 from .full_serializers import FullEventSerializer
-from .profile_serializers import UserSerializer
+from .profile_serializers import UserSerializer, PublicProfileSerializer, PrivateProfileSerializer
 from .special_serializers import MembersCountEventSerializer

@@ -6,6 +6,8 @@ from . import views
 urlpatterns = [
     path("auth/user/new/", views.UserCreateAPIView.as_view()),
     path("auth/get-token/", obtain_auth_token, name="api_token_auth"),
+    path("profiles/self", views.SelfProfileRetrieveAPIView.as_view()),
+    path("profiles/<int:pk>", views.ProfileRetrieveAPIView.as_view()),
     path("core/events/all/", views.EventListAPIView.as_view()),
     path("core/events/new/", views.EventCreateAPIView.as_view()),
     path("core/events/<int:event_id>/join/", views.MemberAPIView.as_view()),

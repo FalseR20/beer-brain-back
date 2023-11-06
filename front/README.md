@@ -19,10 +19,13 @@ npm isntall
 Run frontend server:
 
 ```shell
-npm run dev -- --host
+npm run dev
 ```
 
-Then you can see the application:
+Or for visibility on the network:
 
-- ➜ Local:   http://localhost:5173/
-- ➜ Network: http://192.168.100.5:5173/
+```shell
+VITE_DJANGO_URL=http://192.168.100.5:8000/ npm run dev -- --host
+```
+
+Then you can see the application.

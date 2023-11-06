@@ -1,4 +1,7 @@
-export const URL_BASE = "http://192.168.100.5:8000/";
+const baseUrlEnv = import.meta.env.VITE_DJANGO_URL;
+
+export const URL_BASE =
+  typeof baseUrlEnv == "undefined" ? "http://localhost:8000/" : baseUrlEnv;
 
 function url(path: string): string {
   return URL_BASE + path;

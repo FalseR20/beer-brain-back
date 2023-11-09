@@ -5,10 +5,10 @@ import NotFound from "./NotFound.tsx";
 import getAuthHeader from "../authentication.ts";
 import "../css/Event.css";
 import { Button, Form, ListGroup, Modal } from "react-bootstrap";
-import { BsClockHistory, BsPencil } from "react-icons/bs";
+import { BsPencil } from "react-icons/bs";
 import { URLS } from "../constants.ts";
-import { RxAvatar, RxPlus } from "react-icons/rx";
-import randomColor from "randomcolor";
+import { RxPlus } from "react-icons/rx";
+import { Avatar48 } from "./Profile.tsx";
 
 interface IEvent {
   id: number;
@@ -67,77 +67,85 @@ function EventValidated({ event }: { event: IEvent }) {
 
   return (
     <Template>
-      <div className={"d-flex align-items-center border-bottom mb-2"}>
-        <h1 className={"mb-3 flex-grow-1"}>{description}</h1>
-        <Button
-          variant={"outline-secondary"}
-          size={"lg"}
-          id={"name-addon"}
-          onClick={() => setShowDescriptionModal(true)}
-        >
-          <div className={"mb-1"}>
-            <BsPencil />
-          </div>
-        </Button>
-        <Button
-          variant={"outline-secondary"}
-          size={"lg"}
-          id={"history-btn"}
-          className={"ms-2"}
-        >
-          <div className={"mb-1"}>
-            <BsClockHistory />
-          </div>
-        </Button>
-      </div>
-      <Modal
-        show={showDescriptionModal}
-        onHide={() => setShowDescriptionModal(false)}
+      <div
+        className={
+          "border rounded-bottom-4 bg-body-tertiary p-2 d-flex flex-row"
+        }
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Description updating</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+        <div
+          className={"border rounded-bottom-4"}
+          style={{
+            height: "3rem",
+            width: "3rem",
+            fontSize: "1.5rem",
+            padding: "0.5rem",
+            textAlign: "center",
+          }}
+        >
+          {event.id}
+        </div>
+        <div className={"d-flex align-items-center border-bottom mb-2"}>
+          <h1 className={"mb-2 flex-grow-1"}>{description}</h1>
+          <Button
+            variant={"outline-secondary"}
+            size={"lg"}
+            id={"name-addon"}
+            className={"p-1 border rounded-5"}
+            onClick={() => setShowDescriptionModal(true)}
+          >
+            <div className={"pb-1 px-2"}>
+              <BsPencil />
+            </div>
+          </Button>
+        </div>
+        <Modal
+          show={showDescriptionModal}
+          onHide={() => setShowDescriptionModal(false)}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Description updating</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlTextarea1"
+              >
+                <Form.Label>New description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  defaultValue={description}
+                  onChange={(e) => {
+                    setNewDescription(e.target.value);
+                  }}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="outline-secondary"
+              onClick={() => setShowDescriptionModal(false)}
             >
-              <Form.Label>New description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                defaultValue={description}
-                onChange={(e) => {
-                  setNewDescription(e.target.value);
-                }}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="outline-secondary"
-            onClick={() => setShowDescriptionModal(false)}
-          >
-            Close
-          </Button>
-          <Button
-            id={"btn-modal-ok"}
-            variant="primary"
-            onClick={() => {
-              if (newDescription != description) {
-                console.log(`New description ${newDescription}`);
-                setDescription(newDescription!);
-              }
-              setShowDescriptionModal(false);
-            }}
-          >
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
+              Close
+            </Button>
+            <Button
+              id={"btn-modal-ok"}
+              variant="primary"
+              onClick={() => {
+                if (newDescription != description) {
+                  console.log(`New description ${newDescription}`);
+                  setDescription(newDescription!);
+                }
+                setShowDescriptionModal(false);
+              }}
+            >
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
       <div className={"mb-1"}>
         <h5>
           {event.date}, {event.members.length} people
@@ -151,16 +159,7 @@ function EventValidated({ event }: { event: IEvent }) {
                 key={member.id}
               >
                 <Link to={`/user/${member.id}`}>
-                  <RxAvatar
-                    size={48}
-                    aria-label={member.user}
-                    style={{
-                      color: randomColor({
-                        seed: member.id,
-                        luminosity: "light",
-                      }),
-                    }}
-                  />
+                  <Avatar48 id={member.id} />
                 </Link>
               </div>
             );

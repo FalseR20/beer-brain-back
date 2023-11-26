@@ -11,25 +11,24 @@ interface PageProps {
 }
 
 export default function Template(props: PageProps) {
-  let inner: ReactNode = props.isAuthRequired == true && !isAuthorized() ? Guest() : props.children;
+  let inner: ReactNode =
+    props.isAuthRequired == true && !isAuthorized() ? Guest() : props.children;
   if (props.doAddWrapping != false) {
-    inner = <>
+    inner = (
       <div id={"common-field"} className={"width-60 m-3"}>
         {inner}
       </div>
-    </>;
+    );
   }
-  return <>
+  return (
     <div className={"d-flex flex-column min-vh-100"}>
       <Header />
       <div className={"d-flex flex-row justify-content-center flex-grow-1"}>
-        <div id={"common-field"} className={"width-60 m-3"}>
-          {inner}
-        </div>
+        {inner}
       </div>
       <footer className="bg-body-tertiary border-top text-center text-white-50 p-2">
         &copy; FalseR / Bebra Bebrou
       </footer>
     </div>
-  </>;
+  );
 }

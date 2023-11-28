@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./components/Home.tsx";
 import SignIn from "./components/SignIn.tsx";
 import SignUp from "./components/SignUp.tsx";
-import Event from "./components/Event.tsx";
+import Event from "./components/event/Event.tsx";
 import NotFound from "./components/NotFound.tsx";
 import Guest from "./components/Guest.tsx";
 import "./css/App.scss";

@@ -22,9 +22,12 @@ interface IDeposit {
 
 export interface IChatElement {
   member: {
-    id: number
-    name_letters: string
+    id: number; name_letters: string;
   };
+  actions: IChatEvent[];
+}
+
+export interface IChatEvent {
+  name: string;
   datetime: string;
-  action: string;
 }

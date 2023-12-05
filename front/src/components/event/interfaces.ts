@@ -1,3 +1,5 @@
+import { IProfile } from "../Profile.tsx";
+
 export interface IEvent {
   id: number;
   date: string;
@@ -22,7 +24,7 @@ interface IDeposit {
 
 export interface IChatElement {
   member: {
-    id: number; name_letters: string;
+    profile: IProfile;
   };
   actions: IChatEvent[];
 }

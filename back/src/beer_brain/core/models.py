@@ -1,9 +1,7 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 
-
-class Profile(models.Model):
-    auth_user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+User = get_user_model()
 
 
 class Event(models.Model):

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from beer_brain.core import models
-from beer_brain.core.serializers.profile_serializers import UserSerializer
+from beer_brain.users.serializers import UserSerializer
 
 
 class FullDepositSerializer(serializers.ModelSerializer):

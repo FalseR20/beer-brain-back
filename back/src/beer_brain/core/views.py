@@ -1,34 +1,11 @@
-from django.contrib.auth.models import User
 from rest_framework import generics, views
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from . import models, serializers
-
-
-class UserCreateAPIView(generics.CreateAPIView):
-    permission_classes = [AllowAny]
-    queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
-
-
-class ProfileRetrieveAPIView(generics.RetrieveAPIView):
-    permission_classes = [AllowAny]
-    queryset = models.Profile.objects.all()
-    serializer_class = serializers.PublicProfileSerializer
-
-
-class SelfProfileRetrieveAPIView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
-    queryset = models.Profile.objects.all()
-    serializer_class = serializers.PrivateProfileSerializer
-
-    def retrieve(self, request: Request, *args, **kwargs):
-        profile: models.Profile = self.queryset.get(auth_user=request.user)
-        return Response(self.serializer_class(profile).data)
 
 
 class EventListAPIView(generics.ListAPIView):

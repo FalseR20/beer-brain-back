@@ -29,8 +29,6 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    # Local apps
-    "beer_brain.core",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -42,7 +40,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
+    # Local apps
+    "beer_brain.users.apps.UsersConfig",
+    "beer_brain.core.apps.CoreConfig",
 ]
+
+AUTH_USER_MODEL = "users.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

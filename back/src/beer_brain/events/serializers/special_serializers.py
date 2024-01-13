@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.request import Request
 
-from beer_brain.core import models
+from .. import models
 
 
 class MembersCountEventSerializer(serializers.ModelSerializer):

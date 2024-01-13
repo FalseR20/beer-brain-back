@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "corsheaders",
     # Local apps
     "beer_brain.users.apps.UsersConfig",
-    "beer_brain.core.apps.CoreConfig",
+    "beer_brain.events.apps.EventsConfig",
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -50,6 +50,9 @@ AUTH_USER_MODEL = "users.User"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
     ],
 }
 

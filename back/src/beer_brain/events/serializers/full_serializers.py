@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from beer_brain.core import models
-from beer_brain.users.serializers import UserSerializer
+from beer_brain.users.serializers import CreateUserSerializer
+from .. import models
 
 
 class FullDepositSerializer(serializers.ModelSerializer):
@@ -11,7 +11,7 @@ class FullDepositSerializer(serializers.ModelSerializer):
 
 
 class FullMemberSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = CreateUserSerializer(read_only=True)
     deposits = FullDepositSerializer(many=True, read_only=True)
 
     class Meta:

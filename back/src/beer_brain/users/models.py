@@ -5,18 +5,18 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .managers import CustomUserManager
+from .validators import UsernameValidator
 
 
 class User(AbstractUser):
-    username_unicode_validator = UnicodeUsernameValidator()
-    username_min3_validator = MinLengthValidator(3)
+    username_validator = UsernameValidator()
 
     username = models.CharField(
         _("username"),
         max_length=128,
         unique=True,
-        help_text=_("Required. 3-128 characters. Letters, digits and @/./+/-/_ only."),
-        validators=[username_unicode_validator, username_min3_validator],
+        help_text=_("Required. 3-128 characters. Letters, digits and _ only."),
+        validators=[username_validator],
         error_messages={
             "unique": _("A user with that username already exists."),
         },

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CoreConfig(AppConfig):
+class EventsConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "beer_brain.core"
+    name = "beer_brain.events"

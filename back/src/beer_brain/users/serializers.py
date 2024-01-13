@@ -4,10 +4,10 @@ from rest_framework import serializers
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "password", "full_name"]
+        fields = ["username", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data: dict):
@@ -18,13 +18,11 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class PublicUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "full_name"]
-
-
-class PrivateUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "username", "full_name"]
+        fields = ["username", "full_name"]
+        extra_kwargs = {
+            "username": {"required": False},
+            "full_name": {"required": False},
+        }

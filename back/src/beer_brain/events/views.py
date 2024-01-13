@@ -30,19 +30,27 @@ class EventCreateAPIView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class EventRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+class EventRetrieveUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
     serializer_class = serializers.GetUpdateEventSerializer
 
-    def update(self, request, *args, **kwargs):
+    def _assert_user_is_host(self, request):
         event: models.Event = self.get_object()
         if request.user != event.host:
             return Response(
                 status=status.HTTP_403_FORBIDDEN,
                 data={"detail": "You are not a host of this event"},
             )
+        return True
+
+    def update(self, request, *args, **kwargs):
+        self._assert_user_is_host(request)
         return super().update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self._assert_user_is_host(request)
+        return super().delete(request, *args, **kwargs)
 
 
 class FullEventRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):

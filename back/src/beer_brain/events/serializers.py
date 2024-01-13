@@ -29,25 +29,42 @@ class CreateEventSerializer(serializers.ModelSerializer):
 class GetUpdateEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Event
-        fields = ["id", "name", "description", "date", "created_at", "is_closed", "host", "users"]
+        fields = [
+            "id",
+            "name",
+            "description",
+            "date",
+            "created_at",
+            "is_closed",
+            "host",
+            "users",
+            "new_host",
+        ]
         extra_kwargs = {
             "name": {"required": False},
             "description": {"required": False},
             "date": {"required": False},
             "created_at": {"read_only": True},
             "is_closed": {"required": False},
-            "host": {"required": False},
         }
 
-    host = UserSerializer(required=False)
+    host = UserSerializer(read_only=True)
     users = UserSerializer(many=True, read_only=True)
+    new_host = serializers.CharField(required=False)
+
+    def validate(self, data):
+        if new_host_username := data.get("new_host"):
+            if not User.objects.filter(username=new_host_username).exists():
+                raise serializers.ValidationError({"new_host": "New host does not exist"})
+        return data
 
     def update(self, instance: models.Event, validated_data: dict):
         instance.name = validated_data.get("name", instance.name)
         instance.description = validated_data.get("description", instance.description)
         instance.date = validated_data.get("date", instance.date)
         instance.is_closed = validated_data.get("is_closed", instance.is_closed)
-        instance.host = validated_data.get("host", instance.host)
+        if new_host_username := validated_data.get("new_host"):
+            instance.host = User.objects.get(username=new_host_username)
         instance.save()
         return instance
 

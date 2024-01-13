@@ -6,17 +6,13 @@ from rest_framework.response import Response
 from . import models, serializers
 
 
-# class EventListAPIView(generics.ListAPIView):
-#     permission_classes = [IsAuthenticated]
-#     queryset = models.Event.objects.all()
-#     serializer_class = serializers.MembersCountEventSerializer
-#
-#     @staticmethod
-#     def get(request: Request, **kwargs):
-#         members = models.Member.objects.filter(user=request.user)
-#         events = [member.event for member in members]
-#         serializer = serializers.MembersCountEventSerializer(events, many=True)
-#         return Response(serializer.data)
+class EventListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = models.Event.objects
+    serializer_class = serializers.GetUpdateEventSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        return super().get_queryset().filter(users=self.request.user)
 
 
 class EventCreateAPIView(generics.CreateAPIView):

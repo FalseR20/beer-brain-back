@@ -50,17 +50,4 @@ class EventRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
 class FullEventRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
-    serializer_class = serializers.FullEventSerializer
-
-
-# class MemberAPIView(views.APIView):
-#     permission_classes = [IsAuthenticated]
-#
-#     @staticmethod
-#     def post(request: Request, event_id: int):
-#         user = request.user
-#         event = get_object_or_404(models.Event, pk=event_id)
-#         if models.Member.objects.filter(user=user, event=event).exists():
-#             raise ValidationError({"detail": "You are already here"})
-#         member = models.Member.objects.create(user=user, event=event)
-#         return Response(serializers.MemberSerializer(member).data)
+    serializer_class = serializers.DetailedEventSerializer

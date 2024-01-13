@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from beer_brain.users.serializers import UserSerializer
-from .. import models
+from . import models
 
 User = get_user_model()
 
@@ -62,3 +62,37 @@ class RepaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Repayment
         fields = ["id", "payer", "recipient", "event", "value"]
+
+
+class DetailedDepositSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Deposit
+        fields = ["id", "user", "value", "description"]
+
+    user = UserSerializer(read_only=True)
+
+
+class DetailedRepaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Repayment
+        fields = ["id", "payer", "recipient", "value"]
+
+    payer = UserSerializer(read_only=True)
+    recipient = UserSerializer(read_only=True)
+
+
+class DetailedEventUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username", "full_name", "deposits", "repayments")
+
+    deposits = DetailedDepositSerializer(many=True, read_only=True)
+    repayments = DetailedRepaymentSerializer(many=True, read_only=True)
+
+
+class DetailedEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Event
+        fields = ["id", "name", "description", "date", "is_closed", "users"]
+
+    users = DetailedEventUserSerializer(many=True, read_only=True)

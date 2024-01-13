@@ -1,5 +1,7 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -47,3 +49,24 @@ class FullEventRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
     serializer_class = serializers.DetailedEventSerializer
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def join_event_api_view(request, *args, **kwargs):
+    event: models.Event = get_object_or_404(models.Event, **kwargs)
+    event.users.add(request.user)
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def leave_event_api_view(request, *args, **kwargs):
+    event: models.Event = get_object_or_404(models.Event, **kwargs)
+    if request.user == event.host:
+        return Response(
+            status=status.HTTP_400_BAD_REQUEST,
+            data={"detail": "You cannot leave this event while you are a host"},
+        )
+    event.users.remove(request.user)
+    return Response(status=status.HTTP_204_NO_CONTENT)

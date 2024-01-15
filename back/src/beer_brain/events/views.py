@@ -78,14 +78,30 @@ class DepositRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
     queryset = models.Deposit.objects
     serializer_class = serializers.GetDepositSerializer
 
-    def get_queryset(self):
-        return super().get_queryset().filter(**self.kwargs)
-
 
 class DepositListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Deposit.objects
     serializer_class = serializers.GetDepositSerializer
 
-    def get_queryset(self):
-        return super().get_queryset().filter(**self.kwargs)
+
+class RepaymentCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = models.Repayment
+    serializer_class = serializers.CreateRepaymentSerializer
+
+    def perform_create(self, serializer):
+        event: models.Event = get_object_or_404(models.Event, pk=self.kwargs["event_id"])
+        serializer.save(payer=self.request.user, event=event)
+
+
+class RepaymentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, permissions.RepaymentEditOnlyPayerOrRecipient]
+    queryset = models.Repayment.objects.all()
+    serializer_class = serializers.GetRepaymentSerializer
+
+
+class RepaymentListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = models.Repayment.objects.all()
+    serializer_class = serializers.GetRepaymentSerializer

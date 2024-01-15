@@ -12,4 +12,7 @@ urlpatterns = [
     path("<str:event_id>/deposits/new/", views.DepositCreateAPIView.as_view()),
     path("<str:event_id>/deposits/<str:pk>/", views.DepositRetrieveUpdateDestroyAPIView.as_view()),
     path("<str:event_id>/deposits/", views.DepositListAPIView.as_view()),
+    path("<str:event_id>/repayments/new/", views.RepaymentCreateAPIView.as_view()),
+    path("<str:event_id>/repayments/<str:pk>/", views.RepaymentRUDAPIView.as_view()),
+    path("<str:event_id>/repayments/", views.RepaymentListAPIView.as_view()),
 ]

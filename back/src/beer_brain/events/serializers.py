@@ -128,7 +128,39 @@ class GetDepositSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
 
-class RepaymentSerializer(serializers.ModelSerializer):
+class CreateRepaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Repayment
-        fields = ["id", "payer", "recipient", "event", "value"]
+        fields = ["id", "payer", "recipient", "recipient_username", "event", "value", "payed_at"]
+        extra_kwargs = {"event": {"read_only": True}, "payed_at": {"required": False}}
+
+    payer = UserSerializer(read_only=True)
+    recipient = UserSerializer(read_only=True)
+    recipient_username = serializers.CharField(write_only=True)
+
+    def create(self, validated_data: dict):
+        recipient_username = validated_data.pop("recipient_username")
+        recipient = User.objects.get(username=recipient_username)
+        event: models.Event = validated_data["event"]
+        if not event.users.filter(username=recipient_username).exists():
+            raise serializers.ValidationError(
+                {"recipient_username": "Recipient is not member of event"}
+            )
+        validated_data["recipient"] = recipient
+        repayment = models.Repayment(**validated_data)
+        repayment.save()
+        return repayment
+
+
+class GetRepaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Repayment
+        fields = ["id", "payer", "recipient", "event", "value", "payed_at"]
+        extra_kwargs = {
+            "event": {"read_only": True},
+            "value": {"required": False},
+            "payed_at": {"required": False},
+        }
+
+    payer = UserSerializer(read_only=True)
+    recipient = UserSerializer(read_only=True)

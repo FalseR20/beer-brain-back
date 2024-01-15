@@ -52,19 +52,19 @@ class GetUpdateEventSerializer(serializers.ModelSerializer):
     users = UserSerializer(many=True, read_only=True)
     new_host = serializers.CharField(required=False)
 
-    def validate(self, data):
-        if new_host_username := data.get("new_host"):
-            if not User.objects.filter(username=new_host_username).exists():
-                raise serializers.ValidationError({"new_host": "New host does not exist"})
-        return data
-
     def update(self, instance: models.Event, validated_data: dict):
         instance.name = validated_data.get("name", instance.name)
         instance.description = validated_data.get("description", instance.description)
         instance.date = validated_data.get("date", instance.date)
         instance.is_closed = validated_data.get("is_closed", instance.is_closed)
         if new_host_username := validated_data.get("new_host"):
-            instance.host = User.objects.get(username=new_host_username)
+            try:
+                new_host = User.objects.get(username=new_host_username)
+            except User.DoesNotExist as e:
+                raise serializers.ValidationError({"new_host": "New host does not exist"}) from e
+            if not new_host.events.filter(id=instance.id).exists():
+                raise serializers.ValidationError({"new_host": "New host is not a member"})
+            instance.host = new_host
         instance.save()
         return instance
 

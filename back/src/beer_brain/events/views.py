@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from . import models, serializers
+from . import models, serializers, permissions
 
 
 class EventListAPIView(generics.ListAPIView):
@@ -31,26 +31,9 @@ class EventCreateAPIView(generics.CreateAPIView):
 
 
 class EventRetrieveUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, permissions.EventEditOnlyHost]
     queryset = models.Event.objects.all()
     serializer_class = serializers.GetUpdateEventSerializer
-
-    def _assert_user_is_host(self, request):
-        event: models.Event = self.get_object()
-        if request.user != event.host:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"detail": "You are not a host of this event"},
-            )
-        return True
-
-    def update(self, request, *args, **kwargs):
-        self._assert_user_is_host(request)
-        return super().update(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        self._assert_user_is_host(request)
-        return super().delete(request, *args, **kwargs)
 
 
 class FullEventRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
@@ -78,3 +61,31 @@ def leave_event_api_view(request, *args, **kwargs):
         )
     event.users.remove(request.user)
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class DepositCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = models.Deposit
+    serializer_class = serializers.CreateDepositSerializer
+
+    def perform_create(self, serializer):
+        event: models.Event = get_object_or_404(models.Event, pk=self.kwargs["event_id"])
+        serializer.save(user=self.request.user, event=event)
+
+
+class DepositRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, permissions.DepositEditOnlyUser]
+    queryset = models.Deposit.objects
+    serializer_class = serializers.GetDepositSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(**self.kwargs)
+
+
+class DepositListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = models.Deposit.objects
+    serializer_class = serializers.GetDepositSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(**self.kwargs)

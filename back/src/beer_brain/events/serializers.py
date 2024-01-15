@@ -69,18 +69,6 @@ class GetUpdateEventSerializer(serializers.ModelSerializer):
         return instance
 
 
-class DepositSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Deposit
-        fields = ["id", "user", "value", "description"]
-
-
-class RepaymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Repayment
-        fields = ["id", "payer", "recipient", "event", "value"]
-
-
 class DetailedDepositSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Deposit
@@ -98,7 +86,7 @@ class DetailedRepaymentSerializer(serializers.ModelSerializer):
     recipient = UserSerializer(read_only=True)
 
 
-class DetailedEventUserSerializer(serializers.ModelSerializer):
+class DetailedUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("username", "full_name", "deposits", "repayments")
@@ -112,4 +100,35 @@ class DetailedEventSerializer(serializers.ModelSerializer):
         model = models.Event
         fields = ["id", "name", "description", "date", "is_closed", "users"]
 
-    users = DetailedEventUserSerializer(many=True, read_only=True)
+    users = DetailedUserSerializer(many=True, read_only=True)
+
+
+# create
+
+
+class CreateDepositSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Deposit
+        fields = ["id", "user", "value", "description", "event"]
+        extra_kwargs = {"event": {"read_only": True}}
+
+    user = UserSerializer(read_only=True)
+
+
+class GetDepositSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Deposit
+        fields = ["id", "user", "value", "description", "event"]
+        extra_kwargs = {
+            "value": {"required": False},
+            "description": {"required": False},
+            "event": {"read_only": True},
+        }
+
+    user = UserSerializer(read_only=True)
+
+
+class RepaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Repayment
+        fields = ["id", "payer", "recipient", "event", "value"]

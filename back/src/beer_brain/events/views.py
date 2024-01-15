@@ -73,7 +73,7 @@ class DepositCreateAPIView(generics.CreateAPIView):
         serializer.save(user=self.request.user, event=event)
 
 
-class DepositRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class DepositRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, permissions.DepositEditOnlyUser]
     queryset = models.Deposit.objects
     serializer_class = serializers.GetDepositSerializer

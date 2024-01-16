@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import generics
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
@@ -49,7 +48,9 @@ class ChangePasswordAPIView(generics.UpdateAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         if not user.check_password(serializer.data.get("old_password")):
-            return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST
+            )
         user.set_password(serializer.data.get("new_password"))
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)

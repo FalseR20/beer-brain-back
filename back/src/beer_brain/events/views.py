@@ -13,8 +13,8 @@ class EventListAPIView(generics.ListAPIView):
     queryset = models.Event.objects
     serializer_class = serializers.GetUpdateEventSerializer
 
-    def get_queryset(self, *args, **kwargs):
-        return super().get_queryset().filter(users=self.request.user)
+    def filter_queryset(self, queryset):
+        return queryset.filter(users=self.request.user)
 
 
 class EventCreateAPIView(generics.CreateAPIView):
@@ -22,12 +22,8 @@ class EventCreateAPIView(generics.CreateAPIView):
     queryset = models.Event.objects.all()
     serializer_class = serializers.CreateEventSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
         serializer.save(host=self.request.user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class EventRetrieveUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):

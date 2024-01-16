@@ -26,13 +26,13 @@ class EventCreateAPIView(generics.CreateAPIView):
         serializer.save(host=self.request.user)
 
 
-class EventRetrieveUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
+class EventRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, permissions.EventEditOnlyHost]
     queryset = models.Event.objects.all()
     serializer_class = serializers.GetUpdateEventSerializer
 
 
-class FullEventRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+class DetailedEventRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
     serializer_class = serializers.DetailedEventSerializer

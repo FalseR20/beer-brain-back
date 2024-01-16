@@ -98,12 +98,10 @@ class DetailedUserSerializer(serializers.ModelSerializer):
 class DetailedEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Event
-        fields = ["id", "name", "description", "date", "is_closed", "users"]
+        fields = ["id", "name", "description", "is_closed", "date", "created_at", "host", "users"]
 
     users = DetailedUserSerializer(many=True, read_only=True)
-
-
-# create
+    host = UserSerializer(read_only=True)
 
 
 class CreateDepositSerializer(serializers.ModelSerializer):

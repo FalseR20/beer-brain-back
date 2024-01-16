@@ -4,9 +4,9 @@ from rest_framework.authtoken.views import obtain_auth_token
 from . import views
 
 urlpatterns = [
-    path("get-token/", obtain_auth_token),
-    path("new/", views.UserCreateAPIView.as_view()),
-    path("profile/me/", views.SelfUserAPIView.as_view()),
-    path("profile/me/change-password/", views.ChangePasswordAPIView.as_view()),
-    path("profile/<str:username>/", views.UserGetAPIView.as_view()),
+    path("token/", obtain_auth_token, name="get-token"),
+    path("new/", views.UserCreateAPIView.as_view(), name="create-user"),
+    path("me/", views.SelfUserAPIView.as_view(), name="get-my-user"),
+    path("me/change-password/", views.ChangePasswordAPIView.as_view(), name="change-password"),
+    path("id/<str:username>/", views.UserGetAPIView.as_view(), name="get-user"),
 ]

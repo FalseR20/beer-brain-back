@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
-    # Local apps
+    "drf_yasg",
+    # First-party apps
     "beer_brain.users.apps.UsersConfig",
     "beer_brain.events.apps.EventsConfig",
 ]
@@ -58,6 +59,16 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
+}
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+        }
+    }
 }
 
 MIDDLEWARE = [

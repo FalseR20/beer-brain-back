@@ -19,7 +19,7 @@ pip install -r requirements.txt
 Project uses PostgreSQL
 
 ```shell
-sudo -u postgres psql;
+sudo -u postgres psql
 ```
 
 ```postgresql

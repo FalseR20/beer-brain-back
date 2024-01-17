@@ -12,3 +12,15 @@ line_length = 99
 multi_line_output = 3
 include_trailing_comma = true
 known_first_party = ["users", "events"]
+
+[tool.pylint]
+FORMAT.max-line-length = 99
+MASTER.ignore = "manage.py"
+MASTER.ignore-paths = ".*/migrations"
+"MESSAGES CONTROL".disable = [
+    "missing-docstring",
+    "fixme",
+    "too-few-public-methods",
+]
+MASTER.load-plugins = "pylint_django"
+MASTER.django-settings-module = "beer_brain.settings"

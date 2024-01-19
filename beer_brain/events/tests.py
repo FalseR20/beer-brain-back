@@ -259,6 +259,7 @@ class RepaymentTests(TestCase):
             recipient=self.host_user,
             event=self.event,
             value=50.00,
+            description="Test repayment",
         )
         url = reverse("rud-repayment", kwargs={"event_id": self.event.id, "pk": repayment.id})
         response = self.client.get(url)
@@ -266,6 +267,7 @@ class RepaymentTests(TestCase):
         self.assertEqual(response.data["payer"]["username"], "test_user")
         self.assertEqual(response.data["recipient"]["username"], "host_user")
         self.assertEqual(response.data["value"], "50.00")
+        self.assertEqual(response.data["description"], "Test repayment")
 
     def test_update_repayment(self):
         repayment = models.Repayment.objects.create(

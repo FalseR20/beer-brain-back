@@ -33,3 +33,4 @@ class Repayment(models.Model):
     event = models.ForeignKey(Event, related_name="repayments", on_delete=models.CASCADE)
     value = models.DecimalField(max_digits=12, decimal_places=2)
     payed_at = models.DateTimeField(auto_now_add=True, blank=True)
+    description = models.CharField(max_length=256, blank=True)

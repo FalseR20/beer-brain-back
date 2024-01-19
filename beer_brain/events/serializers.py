@@ -85,7 +85,7 @@ class DetailedDepositSerializer(serializers.ModelSerializer):
 class DetailedRepaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Repayment
-        fields = ["id", "payer", "recipient", "value"]
+        fields = ["id", "payer", "recipient", "value", "payed_at", "description"]
 
     payer = UserSerializer(read_only=True)
     recipient = UserSerializer(read_only=True)
@@ -121,8 +121,20 @@ class DepositSerializer(serializers.ModelSerializer):
 class CreateRepaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Repayment
-        fields = ["id", "payer", "recipient", "recipient_username", "event", "value", "payed_at"]
-        extra_kwargs = {"event": {"read_only": True}, "payed_at": {"required": False}}
+        fields = [
+            "id",
+            "payer",
+            "recipient",
+            "recipient_username",
+            "event",
+            "value",
+            "payed_at",
+            "description",
+        ]
+        extra_kwargs = {
+            "event": {"read_only": True},
+            "payed_at": {"required": False},
+        }
 
     payer = UserSerializer(read_only=True)
     recipient = UserSerializer(read_only=True)
@@ -145,7 +157,7 @@ class CreateRepaymentSerializer(serializers.ModelSerializer):
 class GetRepaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Repayment
-        fields = ["id", "payer", "recipient", "event", "value", "payed_at"]
+        fields = ["id", "payer", "recipient", "event", "value", "payed_at", "description"]
         extra_kwargs = {"event": {"read_only": True}}
 
     payer = UserSerializer(read_only=True)

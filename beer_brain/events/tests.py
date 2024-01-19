@@ -76,7 +76,10 @@ class EventTests(TestCase):
         )
         event.users.add(self.user)
         event.users.add(self.user2)
-        url = reverse("rud-event", kwargs={"pk": event.id})
+        url = reverse("change-host", kwargs={"pk": event.id})
+        data = {"new_host": "unknown_user"}
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         data = {"new_host": "second_user"}
         response = self.client.put(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

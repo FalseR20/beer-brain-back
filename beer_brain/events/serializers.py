@@ -8,26 +8,7 @@ from . import models
 User = get_user_model()
 
 
-class CreateEventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Event
-        fields = ["id", "name", "description", "date", "created_at", "is_closed", "host", "users"]
-        extra_kwargs = {
-            "created_at": {"read_only": True},
-            "is_closed": {"read_only": True},
-        }
-
-    host = UserSerializer(required=False)
-    users = UserSerializer(many=True, read_only=True)
-
-    def create(self, validated_data: dict):
-        event = models.Event(**validated_data)
-        event.save()
-        event.users.add(validated_data["host"])
-        return event
-
-
-class GetUpdateEventSerializer(serializers.ModelSerializer):
+class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Event
         fields = [
@@ -37,35 +18,58 @@ class GetUpdateEventSerializer(serializers.ModelSerializer):
             "date",
             "created_at",
             "is_closed",
-            "host",
             "users",
-            "new_host",
+            "host",
         ]
         extra_kwargs = {
-            "name": {"required": False},
-            "description": {"required": False},
-            "date": {"required": False},
             "created_at": {"read_only": True},
             "is_closed": {"required": False},
         }
 
-    host = UserSerializer(read_only=True)
     users = UserSerializer(many=True, read_only=True)
-    new_host = serializers.CharField(required=False)
+    host = UserSerializer(read_only=True)
 
-    def update(self, instance: models.Event, validated_data: dict):
-        instance.name = validated_data.get("name", instance.name)
-        instance.description = validated_data.get("description", instance.description)
-        instance.date = validated_data.get("date", instance.date)
-        instance.is_closed = validated_data.get("is_closed", instance.is_closed)
-        if new_host_username := validated_data.get("new_host"):
-            try:
-                new_host = User.objects.get(username=new_host_username)
-            except User.DoesNotExist as e:
-                raise serializers.ValidationError({"new_host": "New host does not exist"}) from e
-            if not new_host.events.filter(id=instance.id).exists():
-                raise serializers.ValidationError({"new_host": "New host is not a member"})
-            instance.host = new_host
+    def create(self, validated_data: dict):
+        event = models.Event(**validated_data)
+        event.save()
+        event.users.add(event.host)
+        return event
+
+
+class ChangeHostSerializer(EventSerializer):
+    class Meta:
+        model = models.Event
+        fields = [
+            "id",
+            "name",
+            "description",
+            "date",
+            "created_at",
+            "is_closed",
+            "users",
+            "host",
+            "new_host",
+        ]
+        extra_kwargs = {
+            "name": {"read_only": True},
+            "description": {"read_only": True},
+            "date": {"read_only": True},
+            "created_at": {"read_only": True},
+            "is_closed": {"read_only": True},
+        }
+
+    users = UserSerializer(many=True, read_only=True)
+    host = UserSerializer(read_only=True)
+    new_host = serializers.CharField(write_only=True)
+
+    def update(self, instance, validated_data):
+        try:
+            new_host = User.objects.get(username=validated_data["new_host"])
+        except User.DoesNotExist as e:
+            raise serializers.ValidationError({"new_host": "New host does not exist"}) from e
+        if not new_host.events.filter(id=instance.id).exists():
+            raise serializers.ValidationError({"new_host": "New host is not a member"})
+        instance.host = new_host
         instance.save()
         return instance
 
@@ -119,8 +123,6 @@ class GetDepositSerializer(serializers.ModelSerializer):
         model = models.Deposit
         fields = ["id", "user", "value", "description", "event"]
         extra_kwargs = {
-            "value": {"required": False},
-            "description": {"required": False},
             "event": {"read_only": True},
         }
 

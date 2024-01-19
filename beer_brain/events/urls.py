@@ -8,6 +8,7 @@ urlpatterns = [
     path("<uuid:pk>/", views.EventRetrieveUpdateDestroyAPIView.as_view(), name="rud-event"),
     path("<uuid:pk>/join/", views.join_event_api_view, name="join-event"),
     path("<uuid:pk>/leave/", views.leave_event_api_view, name="leave-event"),
+    path("<uuid:pk>/change-host/", views.ChangeHostAPIView.as_view(), name="change-host"),
     path(
         "<uuid:pk>/detailed/",
         views.DetailedEventRetrieveAPIView.as_view(),

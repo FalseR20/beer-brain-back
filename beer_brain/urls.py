@@ -17,25 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
-from drf_yasg import openapi
-from drf_yasg.views import get_schema_view
-from rest_framework import permissions
-
-SchemaView = get_schema_view(
-    openapi.Info(
-        title="BeerBrain API",
-        default_version="0.0.0",
-        license=openapi.License(name="MIT License"),
-    ),
-    public=True,
-    permission_classes=[permissions.AllowAny],
-)
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
     path("", RedirectView.as_view(url="/swagger/", permanent=False)),
-    path("swagger<format>/", SchemaView.without_ui(cache_timeout=0), name="schema-json"),
-    path("swagger/", SchemaView.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
-    path("redoc/", SchemaView.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    path("swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
+    path("swagger-schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     path("admin/", admin.site.urls),
     path("users/", include("beer_brain.users.urls")),
     path("events/", include("beer_brain.events.urls")),

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
-    "drf_yasg",
+    "drf_spectacular",
     # First-party apps
     "beer_brain.users.apps.UsersConfig",
     "beer_brain.events.apps.EventsConfig",
@@ -59,16 +59,16 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-SWAGGER_SETTINGS = {
-    "SECURITY_DEFINITIONS": {
-        "Token": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header",
-        }
-    }
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "BeerBrain API",
+    "VERSION": "0.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "LICENSE": {"name": "MIT License"}
+    # OTHER SETTINGS
 }
 
 MIDDLEWARE = [

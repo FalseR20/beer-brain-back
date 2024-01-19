@@ -109,22 +109,11 @@ class DetailedEventSerializer(serializers.ModelSerializer):
     host = UserSerializer(read_only=True)
 
 
-class CreateDepositSerializer(serializers.ModelSerializer):
+class DepositSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Deposit
         fields = ["id", "user", "value", "description", "event"]
         extra_kwargs = {"event": {"read_only": True}}
-
-    user = UserSerializer(read_only=True)
-
-
-class GetDepositSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Deposit
-        fields = ["id", "user", "value", "description", "event"]
-        extra_kwargs = {
-            "event": {"read_only": True},
-        }
 
     user = UserSerializer(read_only=True)
 
@@ -157,11 +146,7 @@ class GetRepaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Repayment
         fields = ["id", "payer", "recipient", "event", "value", "payed_at"]
-        extra_kwargs = {
-            "event": {"read_only": True},
-            "value": {"required": False},
-            "payed_at": {"required": False},
-        }
+        extra_kwargs = {"event": {"read_only": True}}
 
     payer = UserSerializer(read_only=True)
     recipient = UserSerializer(read_only=True)

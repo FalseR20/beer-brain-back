@@ -276,7 +276,7 @@ class RepaymentTests(TestCase):
         )
         url = reverse("rud-repayment", kwargs={"event_id": self.event.id, "pk": repayment.id})
         data = {"value": 75.00}
-        response = self.client.put(url, data)
+        response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         repayment.refresh_from_db()
         self.assertEqual(repayment.value, 75.00)

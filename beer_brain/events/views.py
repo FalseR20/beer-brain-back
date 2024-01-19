@@ -79,7 +79,7 @@ def leave_event_api_view(request, *args, **kwargs):
 class DepositCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Deposit
-    serializer_class = serializers.CreateDepositSerializer
+    serializer_class = serializers.DepositSerializer
 
     def perform_create(self, serializer):
         event: models.Event = get_object_or_404(models.Event, pk=self.kwargs["event_id"])
@@ -89,13 +89,13 @@ class DepositCreateAPIView(generics.CreateAPIView):
 class DepositRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, permissions.DepositEditOnlyUser]
     queryset = models.Deposit.objects
-    serializer_class = serializers.GetDepositSerializer
+    serializer_class = serializers.DepositSerializer
 
 
 class DepositListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Deposit.objects
-    serializer_class = serializers.GetDepositSerializer
+    serializer_class = serializers.DepositSerializer
 
 
 class RepaymentCreateAPIView(generics.CreateAPIView):

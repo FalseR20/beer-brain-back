@@ -9,11 +9,6 @@ urlpatterns = [
     path("<uuid:pk>/join/", views.join_event_api_view, name="join-event"),
     path("<uuid:pk>/leave/", views.leave_event_api_view, name="leave-event"),
     path("<uuid:pk>/change-host/", views.ChangeHostAPIView.as_view(), name="change-host"),
-    path(
-        "<uuid:pk>/detailed/",
-        views.DetailedEventRetrieveAPIView.as_view(),
-        name="get-detailed-event",
-    ),
     path("<uuid:event_id>/deposits/", views.DepositListAPIView.as_view(), name="deposit-list"),
     path(
         "<uuid:event_id>/deposits/new/",

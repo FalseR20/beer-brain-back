@@ -41,12 +41,6 @@ class ChangeHostAPIView(generics.UpdateAPIView):
     serializer_class = serializers.ChangeHostSerializer
 
 
-class DetailedEventRetrieveAPIView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
-    queryset = models.Event.objects.all()
-    serializer_class = serializers.DetailedEventSerializer
-
-
 @extend_schema(
     request=None,
     responses={status.HTTP_204_NO_CONTENT: OpenApiResponse()},
@@ -111,10 +105,10 @@ class RepaymentCreateAPIView(generics.CreateAPIView):
 class RepaymentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, permissions.RepaymentEditOnlyPayerOrRecipient]
     queryset = models.Repayment.objects.all()
-    serializer_class = serializers.GetRepaymentSerializer
+    serializer_class = serializers.RepaymentSerializer
 
 
 class RepaymentListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Repayment.objects.all()
-    serializer_class = serializers.GetRepaymentSerializer
+    serializer_class = serializers.RepaymentSerializer

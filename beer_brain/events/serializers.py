@@ -11,7 +11,7 @@ User = get_user_model()
 class DepositSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Deposit
-        fields = ["id", "user", "value", "description", "event"]
+        fields = ["id", "user", "value", "description", "event", "payed_at"]
         extra_kwargs = {"event": {"read_only": True}}
 
     user = UserSerializer(read_only=True)

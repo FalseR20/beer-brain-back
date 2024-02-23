@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+*.sql
+*.pot
+*.mo
+*.po
+*~
+# Директории, которые могут быть созданы в процессе работы
+media
+static
+.env
+.env.*

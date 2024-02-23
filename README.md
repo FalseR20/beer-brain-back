@@ -53,3 +53,16 @@ POSTGRES_PORT=5432
 ```
 
 Then you can run [front-end application](https://github.com/FalseR20/beer-brain-front).
+
+### Deploy
+
+You need to create `.env.prod` file:
+
+```dotenv
+POSTGRES_DB=beer_brain
+POSTGRES_USER=beer_brain
+POSTGRES_PASSWORD=YOUR_PASSWORD
+POSTGRES_HOST=postgres
+```
+
+Then use docker compose (remember to migrate)

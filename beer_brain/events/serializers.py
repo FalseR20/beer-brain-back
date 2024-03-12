@@ -12,7 +12,10 @@ class DepositSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Deposit
         fields = ["id", "user", "value", "description", "event", "payed_at"]
-        extra_kwargs = {"event": {"read_only": True}}
+        extra_kwargs = {
+            "event": {"read_only": True},
+            "payed_at": {"read_only": False, "required": False},
+        }
 
     user = UserSerializer(read_only=True)
 
@@ -32,7 +35,7 @@ class CreateRepaymentSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             "event": {"read_only": True},
-            "payed_at": {"required": False},
+            "payed_at": {"read_only": False, "required": False},
         }
 
     payer = UserSerializer(read_only=True)
@@ -56,11 +59,34 @@ class CreateRepaymentSerializer(serializers.ModelSerializer):
 class RepaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Repayment
-        fields = ["id", "payer", "recipient", "event", "value", "payed_at", "description"]
-        extra_kwargs = {"event": {"read_only": True}}
+        fields = [
+            "id",
+            "payer",
+            "recipient",
+            "recipient_username",
+            "event",
+            "value",
+            "payed_at",
+            "description",
+        ]
+        extra_kwargs = {
+            "event": {"read_only": True},
+            "payed_at": {"read_only": False, "required": False},
+        }
 
     payer = UserSerializer(read_only=True)
     recipient = UserSerializer(read_only=True)
+    recipient_username = serializers.CharField(write_only=True, required=False)
+
+    def update(self, instance: models.Repayment, validated_data):
+        if recipient_username := validated_data.get("recipient_username"):
+            recipient = User.objects.get(username=recipient_username)
+            if not instance.event.users.filter(username=recipient_username).exists():
+                raise serializers.ValidationError(
+                    {"recipient_username": "Recipient is not member of event"}
+                )
+            validated_data["recipient"] = recipient
+        return super().update(instance, validated_data)
 
 
 class EventSerializer(serializers.ModelSerializer):

@@ -23,7 +23,7 @@ class Deposit(models.Model):
     event = models.ForeignKey(Event, related_name="deposits", on_delete=models.CASCADE)
     value = models.DecimalField(max_digits=12, decimal_places=2)
     description = models.CharField(max_length=256, blank=True)
-    payed_at = models.DateTimeField(auto_now_add=True, blank=True)
+    payed_at = models.DateTimeField(auto_now_add=True, blank=True)  # TODO: Rename at a new version
 
 
 class Repayment(models.Model):

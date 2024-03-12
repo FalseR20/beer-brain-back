@@ -81,7 +81,7 @@ class DepositCreateAPIView(generics.CreateAPIView):
 
 
 class DepositRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, permissions.DepositEditOnlyUser]
+    permission_classes = [IsAuthenticated, permissions.DepositEditOnlyUserOrHost]
     queryset = models.Deposit.objects
     serializer_class = serializers.DepositSerializer
 
@@ -103,7 +103,7 @@ class RepaymentCreateAPIView(generics.CreateAPIView):
 
 
 class RepaymentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, permissions.RepaymentEditOnlyPayerOrRecipient]
+    permission_classes = [IsAuthenticated, permissions.RepaymentEditOnlyPayerRecipientHost]
     queryset = models.Repayment.objects.all()
     serializer_class = serializers.RepaymentSerializer
 

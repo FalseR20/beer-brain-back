@@ -12,19 +12,19 @@ class EventEditOnlyHost(permissions.BasePermission):
         return obj.host == request.user
 
 
-class DepositEditOnlyUser(permissions.BasePermission):
+class DepositEditOnlyUserOrHost(permissions.BasePermission):
     message = "You are not creator of this deposit"
 
     def has_object_permission(self, request, view, obj: models.Deposit):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return obj.user == request.user
+        return request.user in (obj.user, obj.event.host)
 
 
-class RepaymentEditOnlyPayerOrRecipient(permissions.BasePermission):
+class RepaymentEditOnlyPayerRecipientHost(permissions.BasePermission):
     message = "You are not payer or recipient of this repayment"
 
     def has_object_permission(self, request, view, obj: models.Repayment):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user in (obj.payer, obj.recipient)
+        return request.user in (obj.payer, obj.recipient, obj.event.host)

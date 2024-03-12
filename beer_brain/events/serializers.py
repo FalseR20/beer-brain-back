@@ -26,6 +26,7 @@ class CreateRepaymentSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "payer",
+            "payer_username",
             "recipient",
             "recipient_username",
             "event",
@@ -39,18 +40,58 @@ class CreateRepaymentSerializer(serializers.ModelSerializer):
         }
 
     payer = UserSerializer(read_only=True)
+    payer_username = serializers.CharField(write_only=True, required=False)
     recipient = UserSerializer(read_only=True)
-    recipient_username = serializers.CharField(write_only=True)
+    recipient_username = serializers.CharField(write_only=True, required=False)
 
     def create(self, validated_data: dict):
-        recipient_username = validated_data.pop("recipient_username")
-        recipient = User.objects.get(username=recipient_username)
         event: models.Event = validated_data["event"]
-        if not event.users.filter(username=recipient_username).exists():
+        user = validated_data.pop("user")
+        recipient_username = validated_data.pop("recipient_username", None)
+        payer_username = validated_data.pop("payer_username", None)
+
+        if recipient_username and payer_username:
+            msg = "You can set only payer or recipient"
             raise serializers.ValidationError(
-                {"recipient_username": "Recipient is not member of event"}
+                {
+                    "recipient_username": msg,
+                    "payer_username": msg,
+                }
             )
-        validated_data["recipient"] = recipient
+        if not payer_username and not recipient_username:
+            msg = "Recipient or payer is not set"
+            raise serializers.ValidationError(
+                {
+                    "recipient_username": msg,
+                    "payer_username": msg,
+                }
+            )
+
+        if recipient_username:
+            if recipient_username == user.username:
+                raise serializers.ValidationError(
+                    {"recipient_username": "Recipient and payer cannot be the same"}
+                )
+            recipient = User.objects.get(username=recipient_username)
+            if not event.users.filter(username=recipient_username).exists():
+                raise serializers.ValidationError(
+                    {"recipient_username": "Recipient is not member of event"}
+                )
+            validated_data["recipient"] = recipient
+            validated_data["payer"] = user
+        else:
+            if payer_username == user.username:
+                raise serializers.ValidationError(
+                    {"payer_username": "Payer and recipient cannot be the same"}
+                )
+            payer = User.objects.get(username=payer_username)
+            if not event.users.filter(username=payer_username).exists():
+                raise serializers.ValidationError(
+                    {"payer_username": "Payer is not member of event"}
+                )
+            validated_data["payer"] = payer
+            validated_data["recipient"] = user
+
         repayment = models.Repayment(**validated_data)
         repayment.save()
         return repayment
@@ -63,7 +104,6 @@ class RepaymentSerializer(serializers.ModelSerializer):
             "id",
             "payer",
             "recipient",
-            "recipient_username",
             "event",
             "value",
             "payed_at",
@@ -76,17 +116,6 @@ class RepaymentSerializer(serializers.ModelSerializer):
 
     payer = UserSerializer(read_only=True)
     recipient = UserSerializer(read_only=True)
-    recipient_username = serializers.CharField(write_only=True, required=False)
-
-    def update(self, instance: models.Repayment, validated_data):
-        if recipient_username := validated_data.get("recipient_username"):
-            recipient = User.objects.get(username=recipient_username)
-            if not instance.event.users.filter(username=recipient_username).exists():
-                raise serializers.ValidationError(
-                    {"recipient_username": "Recipient is not member of event"}
-                )
-            validated_data["recipient"] = recipient
-        return super().update(instance, validated_data)
 
 
 class EventSerializer(serializers.ModelSerializer):

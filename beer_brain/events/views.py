@@ -99,7 +99,7 @@ class RepaymentCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         event: models.Event = get_object_or_404(models.Event, pk=self.kwargs["event_id"])
-        serializer.save(payer=self.request.user, event=event)
+        serializer.save(user=self.request.user, event=event)
 
 
 class RepaymentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):

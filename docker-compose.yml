@@ -30,5 +30,13 @@ services:
     volumes:
       - pgdbdata:/var/lib/postgresql/data/
 
+  vite:
+    build: ../beer-brain-front
+    container_name: vite
+    ports:
+      - 4173:4173
+    depends_on:
+      - django
+
 volumes:
   pgdbdata: null

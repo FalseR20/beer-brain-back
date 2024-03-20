@@ -31,7 +31,10 @@ services:
       - pgdbdata:/var/lib/postgresql/data/
 
   vite:
-    build: ../beer-brain-front
+    build:
+      context: ../beer-brain-front
+      args:
+        - VITE_DJANGO_URL=${VITE_DJANGO_URL}
     container_name: vite
     ports:
       - 4173:4173

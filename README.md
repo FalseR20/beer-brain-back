@@ -65,4 +65,9 @@ POSTGRES_PASSWORD=YOUR_PASSWORD
 POSTGRES_HOST=postgres
 ```
 
+and `.env` file:
+```dotenv
+VITE_DJANGO_URL=YOUR_VITE_URL
+```
+
 Then use docker compose (remember to migrate)

@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from . import models, permissions, serializers
+from . import models, paginators, permissions, serializers
 
 User = get_user_model()
 
@@ -15,6 +15,7 @@ class EventListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects
     serializer_class = serializers.EventSerializer
+    pagination_class = paginators.EventsPaginator
 
     def filter_queryset(self, queryset):
         return queryset.filter(users=self.request.user)

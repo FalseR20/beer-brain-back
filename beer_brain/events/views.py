@@ -71,45 +71,53 @@ def leave_event_api_view(request, *args, **kwargs):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class DepositCreateAPIView(generics.CreateAPIView):
+class TransactionCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = models.Deposit
-    serializer_class = serializers.DepositSerializer
+    queryset = models.Transaction
+    serializer_class = serializers.TransactionSerializer
 
     def perform_create(self, serializer):
         event: models.Event = get_object_or_404(models.Event, pk=self.kwargs["event_id"])
-        serializer.save(user=self.request.user, event=event)
+        serializer.save(event=event)
 
 
-class DepositRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, permissions.DepositEditOnlyUserOrHost]
-    queryset = models.Deposit.objects
-    serializer_class = serializers.DepositSerializer
+class TransactionRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, permissions.TransactionEditMemberOrHost]
+    queryset = models.Transaction.objects
+    serializer_class = serializers.TransactionSerializer
 
 
-class DepositListAPIView(generics.ListAPIView):
+class DetailedTransactionRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, permissions.TransactionEditMemberOrHost]
+    queryset = models.Transaction.objects
+    serializer_class = serializers.DetailedTransactionSerializer
+
+
+class TransactionListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = models.Deposit.objects
-    serializer_class = serializers.DepositSerializer
+    queryset = models.Transaction.objects
+    serializer_class = serializers.TransactionSerializer
 
 
-class RepaymentCreateAPIView(generics.CreateAPIView):
+class MovementCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = models.Repayment
-    serializer_class = serializers.CreateRepaymentSerializer
+    queryset = models.Movement
+    serializer_class = serializers.SimpleMovementSerializer
 
     def perform_create(self, serializer):
-        event: models.Event = get_object_or_404(models.Event, pk=self.kwargs["event_id"])
-        serializer.save(user=self.request.user, event=event)
+        transaction: models.Transaction = get_object_or_404(
+            models.Transaction, pk=self.kwargs["transaction_id"]
+        )
+        serializer.save(transaction=transaction)
 
 
-class RepaymentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, permissions.RepaymentEditOnlyPayerRecipientHost]
-    queryset = models.Repayment.objects.all()
-    serializer_class = serializers.RepaymentSerializer
+class MovementRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, permissions.MovementEditUserOrHost]
+    queryset = models.Movement.objects.all()
+    serializer_class = serializers.SimpleMovementSerializer
 
 
-class RepaymentListAPIView(generics.ListAPIView):
+class MovementListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = models.Repayment.objects.all()
-    serializer_class = serializers.RepaymentSerializer
+    queryset = models.Movement.objects.all()
+    serializer_class = serializers.SimpleMovementSerializer

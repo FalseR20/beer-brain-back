@@ -8,114 +8,93 @@ from . import models
 User = get_user_model()
 
 
-class DepositSerializer(serializers.ModelSerializer):
+class SimpleMovementSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Deposit
-        fields = ["id", "user", "value", "description", "event", "payed_at"]
-        extra_kwargs = {
-            "event": {"read_only": True},
-            "payed_at": {"read_only": False, "required": False},
-        }
+        model = models.Movement
+        fields = ["id", "user", "username", "delta", "cancel"]
 
     user = UserSerializer(read_only=True)
+    username = serializers.CharField(write_only=True)
+
+    def create(self, validated_data):
+        username = validated_data.pop("username")
+        user = User.objects.get(username=username)
+        return models.Movement.objects.create(user=user, **validated_data)
+
+    def update(self, instance, validated_data):
+        username = validated_data.pop("username", None)
+        if username:
+            user = User.objects.get(username=username)
+            instance.username = user.username
+        return super().update(instance, validated_data)
 
 
-class CreateRepaymentSerializer(serializers.ModelSerializer):
+class SimpleTransactionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Repayment
+        model = models.Transaction
+        fields = ["id", "description", "datetime"]
+
+
+class SimpleEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Event
         fields = [
             "id",
-            "payer",
-            "payer_username",
-            "recipient",
-            "recipient_username",
-            "event",
-            "value",
-            "payed_at",
+            "name",
             "description",
+            "is_closed",
+            "date",
+            "created_at",
+            "host",
+            "users",
         ]
         extra_kwargs = {
-            "event": {"read_only": True},
-            "payed_at": {"read_only": False, "required": False},
+            "created_at": {"read_only": True},
+            "is_closed": {"required": False},
         }
 
-    payer = UserSerializer(read_only=True)
-    payer_username = serializers.CharField(write_only=True, required=False)
-    recipient = UserSerializer(read_only=True)
-    recipient_username = serializers.CharField(write_only=True, required=False)
+    users = UserSerializer(many=True, read_only=True)
+    host = UserSerializer(read_only=True)
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Transaction
+        fields = ["id", "description", "datetime", "movements"]
+
+    movements = SimpleMovementSerializer(many=True, required=False)
 
     def create(self, validated_data: dict):
-        event: models.Event = validated_data["event"]
-        user = validated_data.pop("user")
-        recipient_username = validated_data.pop("recipient_username", None)
-        payer_username = validated_data.pop("payer_username", None)
-
-        if recipient_username and payer_username:
-            msg = "You can set only payer or recipient"
-            raise serializers.ValidationError(
-                {
-                    "recipient_username": msg,
-                    "payer_username": msg,
-                }
-            )
-        if not payer_username and not recipient_username:
-            msg = "Recipient or payer is not set"
-            raise serializers.ValidationError(
-                {
-                    "recipient_username": msg,
-                    "payer_username": msg,
-                }
-            )
-
-        if recipient_username:
-            if recipient_username == user.username:
-                raise serializers.ValidationError(
-                    {"recipient_username": "Recipient and payer cannot be the same"}
-                )
-            recipient = User.objects.get(username=recipient_username)
-            if not event.users.filter(username=recipient_username).exists():
-                raise serializers.ValidationError(
-                    {"recipient_username": "Recipient is not member of event"}
-                )
-            validated_data["recipient"] = recipient
-            validated_data["payer"] = user
-        else:
-            if payer_username == user.username:
-                raise serializers.ValidationError(
-                    {"payer_username": "Payer and recipient cannot be the same"}
-                )
-            payer = User.objects.get(username=payer_username)
-            if not event.users.filter(username=payer_username).exists():
-                raise serializers.ValidationError(
-                    {"payer_username": "Payer is not member of event"}
-                )
-            validated_data["payer"] = payer
-            validated_data["recipient"] = user
-
-        repayment = models.Repayment(**validated_data)
-        repayment.save()
-        return repayment
+        movements_data: list[dict] | None = validated_data.pop("movements", None)
+        transaction = models.Transaction.objects.create(**validated_data)
+        if movements_data:
+            for movement_data in movements_data:
+                print(movement_data)
+                movement = models.Movement(**movement_data)
+                movement.transaction = transaction
+                movement.save()
+                transaction.movements.add(movement)
+            # TODO: add validating
+            transaction.save()
+        return transaction
 
 
-class RepaymentSerializer(serializers.ModelSerializer):
+class DetailedMovementSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Repayment
-        fields = [
-            "id",
-            "payer",
-            "recipient",
-            "event",
-            "value",
-            "payed_at",
-            "description",
-        ]
-        extra_kwargs = {
-            "event": {"read_only": True},
-            "payed_at": {"read_only": False, "required": False},
-        }
+        model = models.Movement
+        fields = ["id", "user", "username", "transaction", "delta", "cancel"]
 
-    payer = UserSerializer(read_only=True)
-    recipient = UserSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
+    username = serializers.CharField(write_only=True)
+    transaction = SimpleTransactionSerializer(read_only=True)
+
+
+class DetailedTransactionSerializer(TransactionSerializer):
+    class Meta:
+        model = models.Transaction
+        fields = ["id", "description", "datetime", "movements", "event"]
+
+    event = SimpleEventSerializer(read_only=True)
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -125,13 +104,12 @@ class EventSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "description",
+            "is_closed",
             "date",
             "created_at",
-            "is_closed",
-            "users",
             "host",
-            "deposits",
-            "repayments",
+            "users",
+            "transactions",
         ]
         extra_kwargs = {
             "created_at": {"read_only": True},
@@ -140,8 +118,7 @@ class EventSerializer(serializers.ModelSerializer):
 
     users = UserSerializer(many=True, read_only=True)
     host = UserSerializer(read_only=True)
-    deposits = DepositSerializer(many=True, read_only=True)
-    repayments = RepaymentSerializer(many=True, read_only=True)
+    transactions = TransactionSerializer(many=True, read_only=True)
 
     def create(self, validated_data: dict):
         event = models.Event(**validated_data)
@@ -157,14 +134,13 @@ class ChangeHostSerializer(EventSerializer):
             "id",
             "name",
             "description",
+            "is_closed",
             "date",
             "created_at",
-            "is_closed",
-            "users",
             "host",
+            "users",
+            "transactions",
             "new_host",
-            "deposits",
-            "repayments",
         ]
         extra_kwargs = {
             "name": {"read_only": True},
@@ -174,8 +150,6 @@ class ChangeHostSerializer(EventSerializer):
             "is_closed": {"read_only": True},
         }
 
-    users = UserSerializer(many=True, read_only=True)
-    host = UserSerializer(read_only=True)
     new_host = serializers.CharField(write_only=True)
 
     def update(self, instance, validated_data):

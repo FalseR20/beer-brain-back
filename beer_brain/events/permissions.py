@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from . import models
+from beer_brain.events import models
 
 
 class EventEditOnlyHost(permissions.BasePermission):
@@ -12,19 +12,23 @@ class EventEditOnlyHost(permissions.BasePermission):
         return obj.host == request.user
 
 
-class DepositEditOnlyUserOrHost(permissions.BasePermission):
-    message = "You are not creator of this deposit"
+class TransactionEditMemberOrHost(permissions.BasePermission):
+    message = "You are not member of this transaction or a host"
 
-    def has_object_permission(self, request, view, obj: models.Deposit):
+    def has_object_permission(self, request, view, obj: models.Transaction):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user in (obj.user, obj.event.host)
+        allowed_users = {
+            *(movement.user for movement in obj.movements.all() if movement.delta != 0),
+            obj.event.host,
+        }
+        return request.user in allowed_users
 
 
-class RepaymentEditOnlyPayerRecipientHost(permissions.BasePermission):
-    message = "You are not payer or recipient of this repayment"
+class MovementEditUserOrHost(permissions.BasePermission):
+    message = "This movement isn't yours and you aren't a host"
 
-    def has_object_permission(self, request, view, obj: models.Repayment):
+    def has_object_permission(self, request, view, obj: models.Movement):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user in (obj.payer, obj.recipient, obj.event.host)
+        return request.user in {obj.user, obj.transaction.event.host}

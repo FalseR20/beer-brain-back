@@ -9,28 +9,39 @@ urlpatterns = [
     path("<uuid:pk>/join/", views.join_event_api_view, name="join-event"),
     path("<uuid:pk>/leave/", views.leave_event_api_view, name="leave-event"),
     path("<uuid:pk>/change-host/", views.ChangeHostAPIView.as_view(), name="change-host"),
-    path("<uuid:event_id>/deposits/", views.DepositListAPIView.as_view(), name="deposit-list"),
     path(
-        "<uuid:event_id>/deposits/new/",
-        views.DepositCreateAPIView.as_view(),
-        name="create-deposit",
+        "<uuid:event_id>/transactions/",
+        views.TransactionListAPIView.as_view(),
+        name="transaction-list",
     ),
     path(
-        "<uuid:event_id>/deposits/<uuid:pk>/",
-        views.DepositRUDAPIView.as_view(),
-        name="rud-deposit",
+        "<uuid:event_id>/transactions/new/",
+        views.TransactionCreateAPIView.as_view(),
+        name="create-transaction",
     ),
     path(
-        "<uuid:event_id>/repayments/", views.RepaymentListAPIView.as_view(), name="repayment-list"
+        "<uuid:event_id>/transactions/<uuid:pk>/",
+        views.TransactionRUDAPIView.as_view(),
+        name="rud-transaction",
     ),
     path(
-        "<uuid:event_id>/repayments/new/",
-        views.RepaymentCreateAPIView.as_view(),
-        name="create-repayment",
+        "<uuid:event_id>/detailed-transaction/<uuid:pk>/",
+        views.DetailedTransactionRUDAPIView.as_view(),
+        name="rud-detailed-transaction",
     ),
     path(
-        "<uuid:event_id>/repayments/<uuid:pk>/",
-        views.RepaymentRUDAPIView.as_view(),
-        name="rud-repayment",
+        "<uuid:event_id>/transactions/<uuid:transaction_id>/movements/",
+        views.MovementListAPIView.as_view(),
+        name="movement-list",
+    ),
+    path(
+        "<uuid:event_id>/transactions/<uuid:transaction_id>/movements/new/",
+        views.MovementCreateAPIView.as_view(),
+        name="create-movement",
+    ),
+    path(
+        "<uuid:event_id>/transactions/<uuid:transaction_id>/movements/<uuid:pk>/",
+        views.MovementRUDAPIView.as_view(),
+        name="rud-movement",
     ),
 ]

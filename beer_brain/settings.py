@@ -69,8 +69,9 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "BeerBrain API",
     "VERSION": "0.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    "LICENSE": {"name": "MIT License"}
+    "LICENSE": {"name": "MIT License"},
     # OTHER SETTINGS
+    "SCHEMA_PATH_PREFIX": r"/events/{event_id}/",
 }
 
 MIDDLEWARE = [

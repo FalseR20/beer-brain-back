@@ -163,6 +163,8 @@ class ChangeHostSerializer(EventSerializer):
             "users",
             "host",
             "new_host",
+            "deposits",
+            "repayments",
         ]
         extra_kwargs = {
             "name": {"read_only": True},

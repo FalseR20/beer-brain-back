@@ -84,15 +84,8 @@ class TransactionSerializer(serializers.ModelSerializer):
         transaction.save()
         return transaction
 
-
-class DetailedMovementSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Movement
-        fields = ["id", "user", "username", "transaction", "delta", "cancel"]
-
-    user = UserSerializer(read_only=True)
-    username = serializers.CharField(write_only=True)
-    transaction = SimpleTransactionSerializer(read_only=True)
+    # def update(self, instance, validated_data):
+    #     return super().update(instance, validated_data)
 
 
 class DetailedTransactionSerializer(TransactionSerializer):

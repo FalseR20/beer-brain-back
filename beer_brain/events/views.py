@@ -11,6 +11,7 @@ from . import models, paginators, permissions, serializers
 User = get_user_model()
 
 
+@extend_schema(tags=["events"])
 class EventListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects
@@ -21,6 +22,7 @@ class EventListAPIView(generics.ListAPIView):
         return queryset.filter(users=self.request.user)
 
 
+@extend_schema(tags=["events"])
 class EventCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Event.objects.all()
@@ -30,12 +32,14 @@ class EventCreateAPIView(generics.CreateAPIView):
         serializer.save(host=self.request.user)
 
 
+@extend_schema(tags=["events"])
 class EventRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, permissions.EventEditOnlyHost]
     queryset = models.Event.objects.all()
     serializer_class = serializers.EventSerializer
 
 
+@extend_schema(tags=["events"])
 class ChangeHostAPIView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated, permissions.EventEditOnlyHost]
     queryset = models.Event.objects.all()
@@ -45,6 +49,7 @@ class ChangeHostAPIView(generics.UpdateAPIView):
 @extend_schema(
     request=None,
     responses={status.HTTP_204_NO_CONTENT: OpenApiResponse()},
+    tags=["events"],
 )
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -57,6 +62,7 @@ def join_event_api_view(request, *args, **kwargs):
 @extend_schema(
     request=None,
     responses={status.HTTP_204_NO_CONTENT: OpenApiResponse()},
+    tags=["events"],
 )
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -71,6 +77,7 @@ def leave_event_api_view(request, *args, **kwargs):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@extend_schema(tags=["transactions"])
 class TransactionCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Transaction
@@ -81,24 +88,28 @@ class TransactionCreateAPIView(generics.CreateAPIView):
         serializer.save(event=event)
 
 
+@extend_schema(tags=["transactions"])
 class TransactionRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, permissions.TransactionEditMemberOrHost]
     queryset = models.Transaction.objects
     serializer_class = serializers.TransactionSerializer
 
 
+@extend_schema(tags=["transactions"])
 class DetailedTransactionRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, permissions.TransactionEditMemberOrHost]
     queryset = models.Transaction.objects
     serializer_class = serializers.DetailedTransactionSerializer
 
 
+@extend_schema(tags=["transactions"])
 class TransactionListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Transaction.objects
     serializer_class = serializers.TransactionSerializer
 
 
+@extend_schema(tags=["movements"])
 class MovementCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Movement
@@ -111,12 +122,14 @@ class MovementCreateAPIView(generics.CreateAPIView):
         serializer.save(transaction=transaction)
 
 
+@extend_schema(tags=["movements"])
 class MovementRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, permissions.MovementEditUserOrHost]
     queryset = models.Movement.objects.all()
     serializer_class = serializers.SimpleMovementSerializer
 
 
+@extend_schema(tags=["movements"])
 class MovementListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Movement.objects.all()

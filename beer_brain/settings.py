@@ -71,7 +71,6 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     "LICENSE": {"name": "MIT License"},
     # OTHER SETTINGS
-    "SCHEMA_PATH_PREFIX": r"/events/{event_id}/",
 }
 
 MIDDLEWARE = [

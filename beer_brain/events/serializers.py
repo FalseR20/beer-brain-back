@@ -64,18 +64,24 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     movements = SimpleMovementSerializer(many=True, required=False)
 
+    def validate(self, attrs):
+        movements = attrs.get("movements", [])
+        users = [movement["username"] for movement in movements]
+        if len(users) != len(set(users)):
+            raise serializers.ValidationError("There must be only one user")
+        return attrs
+
     def create(self, validated_data: dict):
-        movements_data: list[dict] | None = validated_data.pop("movements", None)
+        movements_data = validated_data.pop("movements", [])
         transaction = models.Transaction.objects.create(**validated_data)
-        if movements_data:
-            for movement_data in movements_data:
-                print(movement_data)
-                movement = models.Movement(**movement_data)
-                movement.transaction = transaction
-                movement.save()
-                transaction.movements.add(movement)
-            # TODO: add validating
-            transaction.save()
+        movements = []
+        for movement_data in movements_data:
+            movement_serializer = SimpleMovementSerializer(data=movement_data)
+            movement_serializer.is_valid(raise_exception=True)
+            movement = movement_serializer.save(transaction=transaction)
+            movements.append(movement)
+            transaction.movements.add(*movements)
+        transaction.save()
         return transaction
 
 

@@ -25,6 +25,9 @@ class Transaction(models.Model):
 
 
 class Movement(models.Model):
+    class Meta:
+        unique_together = (("user", "transaction"),)
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, related_name="movements", on_delete=models.CASCADE)
     transaction = models.ForeignKey(

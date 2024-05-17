@@ -14,6 +14,13 @@ python3.11 -m virtualenv venv
 pip install -r requirements.txt
 ```
 
+Or use pipenv.
+
+```shell
+pipenv sync
+pipenv shell
+```
+
 ### Setting database
 
 Project uses PostgreSQL

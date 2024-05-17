@@ -1,25 +1,32 @@
-FROM python:3.11-slim-buster
+FROM python:3.11.9-slim AS builder
 
-# Установите рабочую директорию в /app
-WORKDIR /app
+WORKDIR /usr/src/
 
-# Установите переменные окружения, необходимые для Python
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PIPENV_VENV_IN_PROJECT=1
 
-# Установите зависимости
 RUN apt-get update \
   && apt-get install -y build-essential \
   && apt-get install -y python3-dev libpq-dev \
   && rm -rf /var/lib/apt/lists/*
 
-# Установите зависимости проекта
 RUN pip install --upgrade pip
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install pipenv
 
-# Копируйте текущий каталог в рабочую директорию /app
+ADD Pipfile Pipfile.lock /usr/src/
+RUN python3 -m pipenv sync
+
+
+FROM python:3.11.9-slim as main
+
+WORKDIR /usr/src/
+
+RUN mkdir -v /usr/src/.venv
+
+COPY --from=builder /usr/src/.venv/ /usr/src/.venv/
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 COPY . .
 
-# Запустите команду для запуска вашего приложения
-CMD ["gunicorn", "beer_brain.wsgi"]
+CMD ["./.venv/bin/python", "-m", "gunicorn", "beer_brain.wsgi"]

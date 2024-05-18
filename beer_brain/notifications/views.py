@@ -4,14 +4,14 @@ from rest_framework.response import Response
 from . import models, serializers
 
 
-class NotificationListView(generics.ListCreateAPIView):
+class NotificationListView(generics.ListAPIView):
     serializer_class = serializers.NotificationSerializer
 
     def get_queryset(self):
         return models.Notification.objects.filter(user=self.request.user)
 
 
-class UnreadNotificationListView(generics.ListCreateAPIView):
+class UnreadNotificationListView(generics.ListAPIView):
     serializer_class = serializers.NotificationSerializer
 
     def get_queryset(self):
@@ -19,11 +19,11 @@ class UnreadNotificationListView(generics.ListCreateAPIView):
 
 
 class MarkNotificationsView(generics.UpdateAPIView):
-    queryset = models.Notification.objects.all()
+    http_method_names = ["patch"]
 
-    def update(self, request, *args, **kwargs):
+    def partial_update(self, request, *args, **kwargs):
         try:
-            notification = models.Notification.objects.get(id=kwargs["pk"], user_id=request.user)
+            notification = models.Notification.objects.get(id=kwargs["pk"], user=request.user)
             notifications_to_mark_read = models.Notification.objects.filter(
                 created_at__lte=notification.created_at, user=request.user, is_read=False
             )

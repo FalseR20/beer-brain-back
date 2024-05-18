@@ -1,3 +1,4 @@
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -20,6 +21,13 @@ class UnreadNotificationListView(generics.ListAPIView):
         return models.Notification.objects.filter(user=self.request.user, is_read=False)
 
 
+@extend_schema(
+    request=None,
+    responses={
+        status.HTTP_204_NO_CONTENT: OpenApiResponse(),
+        status.HTTP_404_NOT_FOUND: OpenApiResponse(description="Notification not found"),
+    },
+)
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
 def mark_notifications_read(request, *args, **kwargs):

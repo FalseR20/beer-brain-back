@@ -26,5 +26,6 @@ urlpatterns = [
     path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     path("admin/", admin.site.urls),
     path("users/", include("beer_brain.users.urls")),
+    path("notifications/", include("beer_brain.notifications.urls")),
     path("events/", include("beer_brain.events.urls")),
 ]

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     # First-party apps
     "beer_brain.users.apps.UsersConfig",
+    "beer_brain.notifications.apps.NotificationsConfig",
     "beer_brain.events.apps.EventsConfig",
 ]
 

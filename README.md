@@ -4,17 +4,9 @@ BeerBrain back-end server uses Django with the Django REST framework.
 
 ## Quickstart
 
-### Set virtual environment
+### Set pipenv virtual environment
 
 Minimal support version of Python is 3.11.
-
-```shell
-python3.11 -m virtualenv venv
-. ./venv/bin/activate
-pip install -r requirements.txt
-```
-
-Or use pipenv.
 
 ```shell
 pipenv sync

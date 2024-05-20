@@ -102,12 +102,12 @@ class UserTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_user_by_username(self):
-        url = reverse("get-user", kwargs={"username": self.user_username})
+        url = reverse("get-user-by-username", kwargs={"username": self.user_username})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["username"], self.user_username)
 
     def test_get_user_by_username_unknown(self):
-        url = reverse("get-user", kwargs={"username": "0_unknown"})
+        url = reverse("get-user-by-username", kwargs={"username": "0_unknown"})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

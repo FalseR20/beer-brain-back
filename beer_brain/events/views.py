@@ -58,6 +58,7 @@ class ChangeHostAPIView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated, permissions.EventEditOnlyHost]
     queryset = models.Event.objects.all()
     serializer_class = serializers.ChangeHostSerializer
+    http_method_names = ["patch"]
 
     def perform_update(self, serializer: serializers.ChangeHostSerializer):
         event: models.Event = serializer.save()

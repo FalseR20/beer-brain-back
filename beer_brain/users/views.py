@@ -29,6 +29,12 @@ class UserGetAPIView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
 
+
+class UserGetByUsernameAPIView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+
     def get_object(self):
         username = self.kwargs["username"]
         return get_object_or_404(self.get_queryset(), username=username)

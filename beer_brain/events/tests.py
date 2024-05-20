@@ -77,16 +77,16 @@ class EventTests(TestCase):
         event.users.add(self.user)
         event.users.add(self.user2)
         url = reverse("change-host", kwargs={"pk": event.id})
-        data = {"new_host": "unknown_user"}
-        response = self.client.put(url, data)
+        data = {"host_id": "-1"}
+        response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        data = {"new_host": "second_user"}
-        response = self.client.put(url, data)
+        data = {"host_id": self.user2.id}
+        response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         event.refresh_from_db()
         self.assertEqual(event.host, self.user2)
         # One more time without rights
-        response = self.client.put(url, data)
+        response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_event(self):
@@ -234,7 +234,7 @@ class RepaymentTests(TestCase):
 
     def create_repayment(self):
         url = reverse("create-repayment", kwargs={"event_id": self.event.id})
-        data = {"recipient_username": self.host_user.username, "value": 50.0}
+        data = {"recipient_id": self.host_user.id, "value": 50.0}
         response = self.client.post(url, data)
         return response
 

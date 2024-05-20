@@ -103,7 +103,7 @@ def leave_event_api_view(request, *args, **kwargs):
     for deposit in deposits_to_delete:
         notify_users(
             users=event.users.exclude(id=request.user.id),
-            message=nt.DEPOSIT_DELETED.format(request.user.id, deposit.id),
+            message=nt.DEPOSIT_DELETED.format(request.user.id, deposit.id, deposit.event.id),
         )
     deposits_to_delete.delete()
 
@@ -114,7 +114,7 @@ def leave_event_api_view(request, *args, **kwargs):
     for repayment in repayments_to_delete:
         notify_users(
             users=event.users.exclude(id=request.user.id),
-            message=nt.REPAYMENT_DELETED.format(request.user.id, repayment.id),
+            message=nt.REPAYMENT_DELETED.format(request.user.id, repayment.id, repayment.event.id),
         )
     repayments_to_delete.delete()
 
@@ -136,7 +136,7 @@ class DepositCreateAPIView(generics.CreateAPIView):
         deposit: models.Deposit = serializer.save(user=self.request.user, event=event)
         notify_users(
             users=event.users.exclude(id=self.request.user.id),
-            message=nt.DEPOSIT_CREATED.format(self.request.user.id, deposit.id),
+            message=nt.DEPOSIT_CREATED.format(self.request.user.id, deposit.id, event.id),
         )
 
 
@@ -149,13 +149,15 @@ class DepositRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
         deposit: models.Deposit = serializer.save()
         notify_users(
             users=deposit.event.users.exclude(id=self.request.user.id),
-            message=nt.DEPOSIT_UPDATED.format(self.request.user.id, deposit.id),
+            message=nt.DEPOSIT_UPDATED.format(self.request.user.id, deposit.id, deposit.event.id),
         )
 
     def perform_destroy(self, instance: models.Deposit):
         notify_users(
             users=instance.event.users.exclude(id=self.request.user.id),
-            message=nt.DEPOSIT_DELETED.format(self.request.user.id, instance.id),
+            message=nt.DEPOSIT_DELETED.format(
+                self.request.user.id, instance.id, instance.event.id
+            ),
         )
         instance.delete()
 
@@ -176,7 +178,9 @@ class RepaymentCreateAPIView(generics.CreateAPIView):
         repayment: models.Repayment = serializer.save(user=self.request.user, event=event)
         notify_user(
             user=repayment.recipient if self.request.user == repayment.payer else repayment.payer,
-            message=nt.REPAYMENT_CREATED.format(self.request.user.id, repayment.id),
+            message=nt.REPAYMENT_CREATED.format(
+                self.request.user.id, repayment.id, repayment.event.id
+            ),
         )
 
 
@@ -189,13 +193,17 @@ class RepaymentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
         repayment: models.Repayment = serializer.save()
         notify_user(
             user=repayment.recipient if self.request.user == repayment.payer else repayment.payer,
-            message=nt.REPAYMENT_UPDATED.format(self.request.user.id, repayment.id),
+            message=nt.REPAYMENT_UPDATED.format(
+                self.request.user.id, repayment.id, repayment.event.id
+            ),
         )
 
     def perform_destroy(self, instance: models.Repayment):
         notify_user(
             user=instance.recipient if self.request.user == instance.payer else instance.payer,
-            message=nt.REPAYMENT_DELETED.format(self.request.user.id, instance.id),
+            message=nt.REPAYMENT_DELETED.format(
+                self.request.user.id, instance.id, instance.event.id
+            ),
         )
         instance.delete()
 

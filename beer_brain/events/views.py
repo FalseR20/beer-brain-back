@@ -76,11 +76,12 @@ class ChangeHostAPIView(generics.UpdateAPIView):
 @permission_classes([IsAuthenticated])
 def join_event_api_view(request, *args, **kwargs):
     event: models.Event = get_object_or_404(models.Event, **kwargs)
-    event.users.add(request.user)
-    notify_users(
-        users=event.users.exclude(id=request.user.id),
-        message=nt.EVENT_JOINED.format(request.user.id, event.id),
-    )
+    if not event.users.filter(id=request.user.id).exists():
+        event.users.add(request.user)
+        notify_users(
+            users=event.users.exclude(id=request.user.id),
+            message=nt.EVENT_JOINED.format(request.user.id, event.id),
+        )
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 

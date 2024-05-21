@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
-from . import models, serializers
+from . import models, permissions, serializers
 
 
 class NotificationListView(generics.ListAPIView):
@@ -19,7 +19,4 @@ class NotificationListView(generics.ListAPIView):
 class NotificationAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.NotificationMarkSerializer
     queryset = models.Notification.objects
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+    permission_classes = [IsAuthenticated, permissions.OnlyNotificationUser]

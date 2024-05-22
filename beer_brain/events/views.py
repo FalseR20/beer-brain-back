@@ -63,8 +63,8 @@ class ChangeHostAPIView(generics.UpdateAPIView):
     def perform_update(self, serializer: serializers.ChangeHostSerializer):
         event: models.Event = serializer.save()
         notify_users(
-            users=event.users.exclude(id=event.host.id),
-            message=nt.HOST_CHANGED.format(event.host.id, event.id),
+            users=event.users.exclude(id=self.request.user.id),
+            message=nt.HOST_CHANGED.format(event.host.id, event.id, self.request.user.id),
         )
 
 

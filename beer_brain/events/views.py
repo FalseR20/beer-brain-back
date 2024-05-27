@@ -168,6 +168,9 @@ class DepositListAPIView(generics.ListAPIView):
     queryset = models.Deposit.objects
     serializer_class = serializers.DepositSerializer
 
+    def get_queryset(self):
+        return self.queryset.filter(**self.kwargs)
+
 
 class RepaymentCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -211,5 +214,8 @@ class RepaymentRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 class RepaymentListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = models.Repayment.objects.all()
+    queryset = models.Repayment.objects
     serializer_class = serializers.RepaymentSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(**self.kwargs)
